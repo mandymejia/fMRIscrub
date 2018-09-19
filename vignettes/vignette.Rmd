@@ -38,7 +38,7 @@ As input, the algorithm take an __T__ x __V__ matrix, __Y__. In our case, __Y__ 
 
 ## Installation
 
-To install the package from GitHub:
+To install the package from GitHub and load it:
 
 ```{r, warning = FALSE, message = FALSE}
 library(devtools)
@@ -58,29 +58,23 @@ Here, we will run through a simple example. First let's pull the data, as follow
 ```{r, warning = FALSE, message = FALSE}
 data(dat1)
 data(dat2)
-dim(dat1)
-dim(dat2)
 ```
 
-Quick visualization of the data.  This is one slice of the first fMRI volume and of the brain mask for the first subject.
+The fMRI data for both subjects has already had a brain mask applied has been vectorized to form a $T\times V$ (time by voxels or vertices) data *matrix*.
 
 ```{r}
-par(mfrow=c(1,2))
-image(dat1[,45,,1])
-image(mask1[,45,])
+dim(Dat1)
+dim(Dat2)
 ```
 
-
-
-Let's first apply the brain mask for 
-
-
-```{r, warning = FALSE, message = FALSE}
-#Insert main function
-```
-
+TO DO:
+1. Run clever on both datasets
+  a. ID PCs with mean eigenvalues, compute leverage and distance
+  b. ID PCs with kurtosis, compute leverage and distance
+2. Identify outliers
+3. Visualize with outliers
+4. Visualize distribution of values (at least for distance)
 
 ## Results
 
-Here, w will 
 
