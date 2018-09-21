@@ -10,7 +10,7 @@ scale_med <- function(mat){
   mad_mat <- matrix(mad, nrow=n, ncol=p, byrow=TRUE)
 
   #check for voxels with MAD = 0
-  zero_mad = mad == 0
+  zero_mad <- mad == 0
   if(any(zero_mad)){
     warning(cat("Warning: ", sum(zero_mad),
       " zero-variance voxels. These will be set to zero.\n", sep=""))
