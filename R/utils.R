@@ -9,7 +9,14 @@ scale_med <- function(mat){
   mad <- 1.4826 * colMedians(abs(mat - ctr_mat), na.rm=TRUE)
   mad_mat <- matrix(mad, nrow=n, ncol=p, byrow=TRUE)
 
-  mat_scaled <- (mat - ctr_mat)/mad_mat
+  #check for voxels with MAD = 0
+  zero_mad = mad == 0
+  if(any(zero_mad)){
+    warning(cat("Warning: ", sum(zero_mad),
+      " zero-variance voxels. These will be set to zero.\n", sep=""))
+  }
+
+  mat_scaled <- ifelse(mad_mat == 0, 0, (mat - ctr_mat)/mad_mat)
   return(mat_scaled)
 }
 
