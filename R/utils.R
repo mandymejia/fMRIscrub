@@ -12,8 +12,13 @@ scale_med <- function(mat){
   #check for voxels with MAD = 0
   zero_mad <- mad == 0
   if(any(zero_mad)){
-    warning(cat("Warning: ", sum(zero_mad),
-      " zero-variance voxels. These will be set to zero.\n", sep=""))
+  	if(all(zero_mad)){
+			stop("All voxels are zero-variance.\n")
+  	} else {
+	    warning(cat("Warning: ", sum(zero_mad),
+	      " zero-variance voxels (out of ", length(zero_mad), 
+	      "). These will be set to zero for estimation of the covariance.\n", sep=""))
+  	}
   }
 
   mat_scaled <- ifelse(mad_mat == 0, 0, (mat - ctr_mat)/mad_mat)

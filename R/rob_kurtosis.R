@@ -13,9 +13,8 @@
 rob_kurtosis <- function(x){
 
   n <- length(x)
-
   mad_x <- 1.4826*median(abs(x-median(x)))
-  kurt = abs(((1/n)*sum( (x-median(x))^4 / #divide by MAD
-                            (mad_x)^4 ) -3))
+  kurt <- abs(( ((1/n)*sum((x-median(x))^4)) / #divide by MAD
+  			(mad_x^4) )-3)
   return(kurt)
 }

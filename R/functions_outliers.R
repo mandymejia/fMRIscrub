@@ -29,7 +29,7 @@ id_out.robdist_subset <- function(distance, inMCD, Q, Fparam){
   out <- data.frame(out.mah99, out.mah999, out.mah99)
   names(out) <- c('0.99 quantile outlier','0.999 quantile outlier','0.9999 quantile outlier')
 
-  result <- list(out, cutoffs)
+  result <- list(outliers=out, cutoffs=cutoffs)
   return(result)
 }
 
@@ -52,7 +52,7 @@ id_out.robdist <- function(distance, inMCD, Q, Fparam){
   out <- data.frame(out.mah99, out.mah999, out.mah99)
   names(out) <- c('0.99 quantile outlier','0.999 quantile outlier','0.9999 quantile outlier')
 
-  result <- list(out, cutoffs)
+  result <- list(outliers=out, cutoffs=cutoffs)
   return(result)
 }
 

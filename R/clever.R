@@ -46,6 +46,15 @@ clever = function(
 
   #compute PCA leverage or robust distance
   method_fun <- switch(method, leverage=PCleverage, robdist_subset=PCrobdist_subset, robdist=PCrobdist)
+  if(method == 'robdist_subset'){
+    if(nrow(U)/3 < ncol(U)){
+      stop("Not enough time points to estimate MCD for this many voxels.")
+    }
+  } else if(method == 'robdist') {
+    if(nrow(U) < ncol(U)){
+      stop("Not enough time points to estimate MCD for this many voxels.")
+    }
+  }
   measure <- method_fun(U)
 
   if(method %in% c('robdist_subset','robdist')){
@@ -57,17 +66,17 @@ clever = function(
 
 
   if(method == 'leverage'){
-    result <- list(U, leverage=measure, robdist=NULL, inMCD=NULL)
+    result <- list(PCs=U, leverage=measure, robdist=NULL, inMCD=NULL)
   } else {
-    result <- list(U, leverage=NULL, robdist=measure, inMCD=inMCD)
+    result <- list(PCs=U, leverage=NULL, robdist=measure, inMCD=inMCD)
   }
 
   #label outliers
   if(id_out){
-    if(method=='leverage') outliers <- id_out.leverage(measure)
+    if(method=='leverage') outliers <- list(outliers=id_out.leverage(measure), cutoffs=NULL)
     if(method=='robdist_subset') outliers <- id_out.robdist_subset(measure, inMCD, Q, Fparam)
     if(method=='robdist') outliers <- id_out.robdist(measure, inMCD, Q, Fparam)
-    result <- c(result, list(outliers))
+    result <- c(result, outliers)
   }
 
   return(result)

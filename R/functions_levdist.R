@@ -48,7 +48,7 @@ PCrobdist_subset <- function(U){
   for(k in 1:3){ # three subsets
     times.k <- seq(starts[k],ends[k],3)
     U.k <- U[times.k,]
-    MCD.k <- covMcd(U.k) #from robustbase package
+    MCD.k <- covMcd(U.k) #from robustbase package #<--Raises error if n/3 < p
     ctr[,k] <- MCD.k$center
     cov[,,k] <- MCD.k$cov
     inMCD.k <- times.k[MCD.k$mcd.wt==1]
@@ -73,7 +73,7 @@ PCrobdist_subset <- function(U){
   mah[!inMCD] <- mah[!inMCD] * qf(0.1, df1=Fparam$df[1], df2=Fparam$df[2]) / quantile(mah[!inMCD], 0.1) #match 10th quantile
 
   result <- list(mah, inMCD, Fparam)
-  names(result) <- c('robdist','inMCD')
+  names(result) <- c('robdist','inMCD','Fparam')
   return(result)
 }
 

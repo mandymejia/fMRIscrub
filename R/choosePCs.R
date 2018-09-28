@@ -7,11 +7,11 @@ choosePCs_mean <- function(svd){
 
 #keep components that have high kurtosis
 choosePCs_kurtosis <- function(svd){
-  U <- svd$U
+  U <- svd$u #<-- U matrix
   #first remove components that explain less than 99% of variation
   cumvarexp <- cumsum(svd$d/sum(svd$d))
-  keep <- (cumvarexp > .99)
-  U <- U[,keep]
+  keep <- (cumvarexp < .99)
+  U <- U[,keep] #<-- U matrix
   #compute kurtosis of remaining PCs
   kurt <- apply(U, 2, rob_kurtosis)
   keep <- which(kurt > 2)
