@@ -112,6 +112,7 @@ PCrobdist <- function(U){
 
   #match 10th quantile of sample and F distributions
   mah[!inMCD] <- mah[!inMCD] * qf(0.1, df1=Fparam$df[1], df2=Fparam$df[2]) / quantile(mah[!inMCD], 0.1)
+  #Above line creates NA.
 
   result <- list(mah, inMCD, Fparam)
   names(result) <- c('robdist','inMCD', 'Fparam')

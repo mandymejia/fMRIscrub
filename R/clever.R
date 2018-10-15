@@ -41,7 +41,7 @@ clever = function(
 
   #choose which PCs to retain
   choosePCs_fun <- switch(choosePCs, mean=choosePCs_mean, kurtosis=choosePCs_kurtosis)
-  U <- choosePCs_fun(SVDi)
+  U <- choosePCs_fun(SVDi, method)
   Q <- ncol(U)
 
   #compute PCA leverage or robust distance
@@ -63,17 +63,16 @@ clever = function(
     measure <- measure$robdist
   }
 
-
-
+  params = list(choosePCs=choosePCs, method=method)
   if(method == 'leverage'){
-    result <- list(PCs=U, leverage=measure, robdist=NULL, inMCD=NULL)
+    result <- list(params=params, PCs=U, leverage=measure, robdist=NULL, inMCD=NULL)
   } else {
-    result <- list(PCs=U, leverage=NULL, robdist=measure, inMCD=inMCD)
+    result <- list(params=params, PCs=U, leverage=NULL, robdist=measure, inMCD=inMCD)
   }
 
   #label outliers
   if(id_out){
-    if(method=='leverage') outliers <- list(outliers=id_out.leverage(measure), cutoffs=NULL)
+    if(method=='leverage') outliers <- id_out.leverage(measure)
     if(method=='robdist_subset') outliers <- id_out.robdist_subset(measure, inMCD, Q, Fparam)
     if(method=='robdist') outliers <- id_out.robdist(measure, inMCD, Q, Fparam)
     result <- c(result, outliers)
