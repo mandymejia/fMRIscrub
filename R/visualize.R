@@ -1,9 +1,12 @@
 vis_clever <- function(clever, log_measure = FALSE){
+	choosePCs_formatted <- switch(clever$params$choosePCs,
+		kurtosis='Kurtosis',
+		mean='Mean')
 	method <- clever$params$method
 	method_formatted <- switch(method, 
 		leverage='Leverage',
 		robdist='Robust Distance',
-		robdist_subset='Rubust Distance Subset')
+		robdist_subset='Robust Distance Subset')
 	measure <- switch(method,
 		leverage=clever$leverage,
 		robdist=clever$robdist,
@@ -67,7 +70,10 @@ vis_clever <- function(clever, log_measure = FALSE){
 	coord_cartesian(xlim = c(0, max(d$index)), ylim = c(0, ylim_max)) +
 	theme_classic() +
 	scale_x_continuous(expand=c(0,0)) +
-	scale_y_continuous(expand=c(0,0))
+	scale_y_continuous(expand=c(0,0)) +
+	ggtitle(paste0('Outlier Distribution', 
+		ifelse(any_outliers, '', ' (None Identified)')),
+		subtitle=paste0(choosePCs_formatted,', ',method_formatted))
 	
 	if(method %in% c('robdist','robdist_subset')){
 		plt <- plt + facet_grid(inMCD~.)

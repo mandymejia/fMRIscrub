@@ -100,8 +100,7 @@ PCrobdist <- function(U){
   MCD <- covMcd(U)
   mah <- MCD$mah
   inMCD <- (MCD$mcd.wt==1)
-  Fparam <- fit.F(Q, n, sum(inMCD))
-
+  
   #scale left-out observations to follow F-distribution
   Fparam <- fit.F(Q, n, sum(inMCD))
 
