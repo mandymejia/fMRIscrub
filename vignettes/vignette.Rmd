@@ -64,12 +64,15 @@ refresh_code = function(){
   source("R/functions_outliers.r")
   source("R/params_F.r")
   source("R/rob_kurtosis.r")
-  load('data/dat1.rda')
-  load('data/dat2.rda')
   setwd("vignettes")
 }
 
 refresh_code()
+
+setwd("..")
+load('data/dat1.rda')
+load('data/dat2.rda')
+setwd("vignettes")
 ```
 
 
@@ -110,7 +113,7 @@ clever.Dat2.mean.lev = clever(Dat2)
 clever.Dat2.kurt.lev = clever(Dat2, choosePCs = 'kurtosis')
 
 clever.Dat1.mean.rds = clever(Dat1, method = 'robdist_subset')
-#clever.Dat1.kurt.rds = clever(Dat1, choosePCs = 'kurtosis', method = 'robdist_subset')
+clever.Dat1.kurt.rds = clever(Dat1, choosePCs = 'kurtosis', method = 'robdist_subset')
 clever.Dat2.mean.rds = clever(Dat2, method = 'robdist_subset')
 clever.Dat2.kurt.rds = clever(Dat2, choosePCs = 'kurtosis', method = 'robdist_subset')
 
@@ -119,21 +122,25 @@ clever.Dat1.kurt.rbd = clever(Dat1, choosePCs = 'kurtosis', method = 'robdist')
 clever.Dat2.mean.rbd = clever(Dat2, method = 'robdist')
 clever.Dat2.kurt.rbd = clever(Dat2, choosePCs = 'kurtosis', method = 'robdist')
 
-clevers = list(clever.Dat1.mean.lev, clever.Dat1.kurt.lev, clever.Dat2.mean.lev, clever.Dat2.kurt.lev, clever.Dat1.mean.rds, clever.Dat2.mean.rds, clever.Dat2.kurt.rds, clever.Dat1.mean.rbd, clever.Dat1.kurt.rbd, clever.Dat2.mean.rbd, clever.Dat2.kurt.rbd)
-```
+clevers.Dat1 = list(clever.Dat1.mean.lev, clever.Dat1.kurt.lev, clever.Dat1.mean.rds, clever.Dat1.kurt.rds, clever.Dat1.mean.rbd, clever.Dat1.kurt.rbd)
 
-## Results
+clevers.Dat2 = list(clever.Dat2.mean.lev, clever.Dat2.kurt.lev, clever.Dat2.mean.rds, clever.Dat2.kurt.rds, clever.Dat2.mean.rbd, clever.Dat2.kurt.rbd)
+```
 
 ```{r}
 library(ggplot2)
-refresh_code()
-```
 
-```{r}
-for(clever in clevers){
-  print(clever$params$choosePCs)
-  print(clever$params$method)
+for(clever in clevers.Dat1){
   vis_clever(clever)
   vis_clever(clever, log_measure = T)
 }
 ```
+
+```{r}
+for(clever in clevers.Dat2){
+  vis_clever(clever)
+  vis_clever(clever, log_measure = T)
+}
+```
+
+

@@ -22,7 +22,7 @@ choosePCs_mean <- function(svd, method){
   }
 
   U <- U[,keep]
-  return(U)
+  return(U) #also return min_sd?
 }
 
 #keep components that have high kurtosis
@@ -49,5 +49,5 @@ choosePCs_kurtosis <- function(svd, method){
   }
 
   U <- U[,keep]
-  return(U)
+  return(U) #also return min_kurt?
 }

@@ -46,15 +46,6 @@ clever = function(
 
   #compute PCA leverage or robust distance
   method_fun <- switch(method, leverage=PCleverage, robdist_subset=PCrobdist_subset, robdist=PCrobdist)
-  if(method == 'robdist_subset'){
-    if(nrow(U)/3 < ncol(U)){
-      stop("Not enough time points to estimate MCD for this many voxels.")
-    }
-  } else if(method == 'robdist') {
-    if(nrow(U) < ncol(U)){
-      stop("Not enough time points to estimate MCD for this many voxels.")
-    }
-  }
   measure <- method_fun(U)
 
   if(method %in% c('robdist_subset','robdist')){
