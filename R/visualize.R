@@ -3,9 +3,8 @@
 #' @param clever a clever object
 #' @param log_measure if the measure (on y-axis), i.e. mean or kurtosis, should be log transformed (base 10)
 #'
-#' @export
-#'
 #' @import ggplot2
+#' @export
 #'
 #' @examples
 plot.clever <- function(clever, log_measure = FALSE){
