@@ -54,6 +54,7 @@ NEW_CODE = TRUE
 refresh_code = function(){
   library(miscTools)
   library(stats)
+  library(ggplot2)
   library(robustbase)
   setwd("..")
   source('R/visualize.r')
@@ -128,18 +129,16 @@ clevers.Dat2 = list(clever.Dat2.mean.lev, clever.Dat2.kurt.lev, clever.Dat2.mean
 ```
 
 ```{r}
-library(ggplot2)
-
 for(clever in clevers.Dat1){
-  vis_clever(clever)
-  vis_clever(clever, log_measure = T)
+  plot(clever)
+  plot(clever, log_measure = T)
 }
 ```
 
 ```{r}
 for(clever in clevers.Dat2){
-  vis_clever(clever)
-  vis_clever(clever, log_measure = T)
+  plot(clever)
+  plot(clever, log_measure = T)
 }
 ```
 

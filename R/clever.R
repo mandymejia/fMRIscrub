@@ -69,6 +69,7 @@ clever = function(
     result <- c(result, outliers)
   }
 
+  class(result) <- c('clever', class(result))
   return(result)
 
 }
