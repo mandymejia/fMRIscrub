@@ -46,34 +46,9 @@ As input, the algorithm take an __T__ x __V__ matrix, __Y__. In our case, __Y__ 
 To install the package from GitHub and load it:
 
 ```{r, warning = FALSE, message = FALSE}
-#library(devtools)
-#devtools::install_github('mandymejia/clever')
-#library(clever)
-
-NEW_CODE = TRUE
-refresh_code = function(){
-  library(miscTools)
-  library(stats)
-  library(ggplot2)
-  library(robustbase)
-  setwd("..")
-  source('R/visualize.r')
-  source("R/utils.r")
-  source("R/choosePCs.r")
-  source("R/clever.r")
-  source("R/functions_levdist.r")
-  source("R/functions_outliers.r")
-  source("R/params_F.r")
-  source("R/rob_kurtosis.r")
-  setwd("vignettes")
-}
-
-refresh_code()
-
-setwd("..")
-load('data/dat1.rda')
-load('data/dat2.rda')
-setwd("vignettes")
+library(devtools)
+devtools::install_github('mandymejia/clever')
+library(clever)
 ```
 
 
