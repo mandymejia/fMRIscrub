@@ -21,23 +21,23 @@ vis_clever <- function(clever, log_measure = FALSE){
 		levels=outlier_level_names)[outlier_level_num + 1]
 	d <- data.frame(index, measure, outlier_level)
 	if(method %in% c('robdist','robdist_subset')){
-	  d$inMCD = ifelse(clever$inMCD, 'In MCD', 'Not In MCD')
+	  d$inMCD <- ifelse(clever$inMCD, 'In MCD', 'Not In MCD')
 	}
 	
 	#The outliers will have lines extending downward from their
 	#locations to the x-axis. 
-	is_outlier = d$outlier_level != 'not an outlier'
-	any_outliers = any(is_outlier)
+	is_outlier <- d$outlier_level != 'not an outlier'
+	any_outliers <- any(is_outlier)
 	if(any_outliers){
-		drop_line = d[is_outlier,]
-		drop_line$xmin = drop_line$index - .5
-		drop_line$xmax = drop_line$index + .5
-		drop_line$ymin = 0
-		drop_line$ymax = drop_line$measure
+		drop_line <- d[is_outlier,]
+		drop_line$xmin <- drop_line$index - .5
+		drop_line$xmax <- drop_line$index + .5
+		drop_line$ymin <- 0
+		drop_line$ymax <- drop_line$measure
 		#ggplot will draw rows from top to bottom.
 		#Ordering by outlier level ensures lines for the
 		#most outlying data points are drawn last, i.e. on top. 
-		drop_line = drop_line[order(drop_line$outlier_level),]
+		drop_line <- drop_line[order(drop_line$outlier_level),]
 	}
 	
 	if(log_measure){
@@ -45,13 +45,17 @@ vis_clever <- function(clever, log_measure = FALSE){
 		#Add one to make all transformed values positive.
 		d$measure <- log(d$measure + 1, base = 10)
 		if(any_outliers){
-			drop_line$ymax = log(drop_line$ymax + 1, base = 10)
+			drop_line$ymax <- log(drop_line$ymax + 1, base = 10)
 		}
 		cutoffs <- log(cutoffs + 1, base = 10)
 	}
 	
 	cols <- c(hsv(h=c(.1,.05,1), s=c(.6,.8,1)), '#000000')
-	
+	if(any_outliers){
+		cols <- cols[sort(unique(
+			outlier_level_num[outlier_level_num!=0]))]
+	}
+
 	if(method=='leverage'){ ylim_max <- 1 } 
 	else { ylim_max <- max(d$measure) * 1.01 }
 	
@@ -59,7 +63,7 @@ vis_clever <- function(clever, log_measure = FALSE){
 	if(any_outliers){
 		plt <- plt + geom_rect(data=drop_line, inherit.aes=FALSE,
 			aes(xmin=xmin,xmax=xmax,ymin=ymin,ymax=ymax,
-				fill = outlier_level), alpha=.9)
+				fill=outlier_level), alpha=.9)
 	}
 	plt <- plt + geom_point(show.legend = FALSE) +
 	scale_color_manual(values=c('grey','black','black','black')) +
