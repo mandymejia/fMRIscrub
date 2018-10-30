@@ -61,8 +61,8 @@ clever = function(
 		#  n_timepoints into thirds, it must further reduce n_PCs by 1/3. 
 		q <- 1/3
 		max_keep <- max(1, floor(switch(method, 
-			robdist=nrow(U)*q, 
-			robdist_subset=nrow(U)*q/3)))
+			robdist=nrow(SVDi$u)*q, 
+			robdist_subset=nrow(SVDi$u)*q/3)))
 		U <- choosePCs_fun(SVDi, max_keep=max_keep)
 	} else {
 		U <- choosePCs_fun(SVDi)
