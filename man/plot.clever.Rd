@@ -2,15 +2,25 @@
 % Please edit documentation in R/visualize.R
 \name{plot.clever}
 \alias{plot.clever}
-\title{Visualizes the outlier distribution of a clever object}
+\title{Visualizes the outlier distribution of a clever object.}
 \usage{
 \method{plot}{clever}(clever, log_measure = FALSE)
 }
 \arguments{
-\item{clever}{a clever object}
+\item{clever}{A clever object.}
 
-\item{log_measure}{if the measure (on y-axis), i.e. mean or kurtosis, should be log transformed (base 10)}
+\item{log_measure}{If TRUE (default), will log10-scale the y-axis (the outlyingness
+measure). Vales are increased by 1 before log-transforming to ensure a positive range.}
 }
 \description{
-Visualizes the outlier distribution of a clever object
+Prints a dot plot of the observations (x-axis) against their outlyingness (y-axis), i.e.
+ their leverage or robust distance.
+}
+\details{
+Cutoffs for each outlier level are marked by horizontal dashed lines. Outliers are 
+ highlighted by vertical lines which extend down to the x-axis; they are colored yellow, 
+ orange and red in order of increasing outlyingness.
+
+If the outlyingness measure is robust distance, observations within the MCD are plotted
+ separately from those outside the MCD.
 }

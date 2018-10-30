@@ -1,13 +1,25 @@
-#' Visualizes the outlier distribution of a clever object
+#' Visualizes the outlier distribution of a clever object.
+#' 
+#' Prints a dot plot of the observations (x-axis) against their outlyingness (y-axis), i.e.
+#'  their leverage or robust distance. 
+#' 
+#' Cutoffs for each outlier level are marked by horizontal dashed lines. Outliers are 
+#'  highlighted by vertical lines which extend down to the x-axis; they are colored yellow, 
+#'  orange and red in order of increasing outlyingness. 
+#' 
+#' If the outlyingness measure is robust distance, observations within the MCD are plotted
+#'  separately from those outside the MCD.
 #'
-#' @param clever a clever object
-#' @param log_measure if the measure (on y-axis), i.e. mean or kurtosis, should be log transformed (base 10)
+#' @param clever A clever object.
+#' @param log_measure If TRUE (default), will log10-scale the y-axis (the outlyingness
+#' measure). Vales are increased by 1 before log-transforming to ensure a positive range.
 #'
 #' @import ggplot2
 #' @export
 #'
 #' @examples
 plot.clever <- function(clever, log_measure = FALSE){
+	# Identify the outlier measurement.
 	choosePCs_formatted <- switch(clever$params$choosePCs,
 		kurtosis='Kurtosis',
 		mean='Mean')
@@ -20,11 +32,12 @@ plot.clever <- function(clever, log_measure = FALSE){
 		leverage=clever$leverage,
 		robdist=clever$robdist,
 		robdist_subset=clever$robdist)
+
+	# Identify outliers and their levels of outlyingness.
 	cutoffs <- clever$cutoffs
 	index <- 1:length(measure)
-	outliers <- clever$outliers # <-- NA case?
-	#Get outlier classifications as a single factor. 
-	outlier_level_num <- apply(outliers, 1, sum)
+	outliers <- clever$outliers 
+	outlier_level_num <- apply(outliers, 1, sum)  # get outlier levels as a single factor
 	outlier_level_names <- c('not an outlier', colnames(outliers))
 	outlier_level <- factor(outlier_level_names, 
 		levels=outlier_level_names)[outlier_level_num + 1]
@@ -33,25 +46,26 @@ plot.clever <- function(clever, log_measure = FALSE){
 	  d$inMCD <- ifelse(clever$inMCD, 'In MCD', 'Not In MCD')
 	}
 	
-	#The outliers will have lines extending downward from their
-	#locations to the x-axis. 
+	# The plot will have lines extending downward from outliers
+	#  to the x-axis. 
 	is_outlier <- d$outlier_level != 'not an outlier'
 	any_outliers <- any(is_outlier)
 	if(any_outliers){
+		# Obtain the coordinates of the outliers' lines' vertices.
 		drop_line <- d[is_outlier,]
 		drop_line$xmin <- drop_line$index - .5
 		drop_line$xmax <- drop_line$index + .5
 		drop_line$ymin <- 0
 		drop_line$ymax <- drop_line$measure
-		#ggplot will draw rows from top to bottom.
-		#Ordering by outlier level ensures lines for the
-		#most outlying data points are drawn last, i.e. on top. 
+		# ggplot will draw rows from top to bottom.
+		# Ordering by increasing outlier level ensures lines for the
+		#  most outlying observations are drawn last, i.e. on the top layer.
 		drop_line <- drop_line[order(drop_line$outlier_level),]
 	}
 	
 	if(log_measure){
-		method_formatted <- paste0('log10 ', method_formatted)
-		#Add one to make all transformed values positive.
+		# Add 1 before log transforming to ensure a positive range.
+		method_formatted <- paste0('log10(', method_formatted, ' + 1)')
 		d$measure <- log(d$measure + 1, base = 10)
 		if(any_outliers){
 			drop_line$ymax <- log(drop_line$ymax + 1, base = 10)
@@ -59,6 +73,8 @@ plot.clever <- function(clever, log_measure = FALSE){
 		cutoffs <- log(cutoffs + 1, base = 10)
 	}
 	
+	# The lowest, middle, and highest outlier levels are colored
+	#  yellow, orange, and red, respectively. 
 	cols <- c(hsv(h=c(.1,.05,1), s=c(.6,.8,1)), '#000000')
 	if(any_outliers){
 		cols <- cols[sort(unique(

@@ -2,15 +2,15 @@
 % Please edit documentation in R/functions_levdist.R
 \name{PCleverage}
 \alias{PCleverage}
-\title{Computes PCA leverage}
+\title{Computes PCA leverage.}
 \usage{
 PCleverage(U)
 }
 \arguments{
-\item{U}{n x Q matrix of PC scores}
+\item{U}{An n x Q matrix of PC scores.}
 }
 \value{
-a vector of length n with leverage of each observation
+A vector of length n with the leverage of each observation.
 }
 \description{
 Computes the leverage of each observation, based on its PC scores.

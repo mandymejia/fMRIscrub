@@ -1,11 +1,19 @@
-#' Calculates PCA leverage or robust distance and identifies outliers
+#' Calculates PCA leverage or robust distance and identifies outliers.
 #'
-#' @param x wide (obs x vars) data matrix of values
-#' @param choosePCs method to be utilized in choosing which PCs to retain
-#' @param method method to be utilized in measuring outlyingness
-#' @param id_out if TRUE (default), will label outliers based on leverage or distance
+#' @param x A wide (obs x vars) data matrix of values.
+#' @param choosePCs The method to be utilized in choosing which PCs to retain.
+#' @param method The method to be utilized in measuring outlyingness.
+#' @param id_out If TRUE (default), will label outliers based on leverage or distance.
 #'
-#' @return A list containing PC scores, number of PCs retained, leverage or distance and (if id.out=TRUE) outlier indicator vectors
+#' @return A clever object, i.e. a list with components
+#' \describe{
+#' 	\item{params}{A list with the `choosePCs` and `method` arguments used in the clever call.}
+#'  \item{PCs}{The PCs used to calculate leverage or robust distance, i.e. the subsetted U matrix from the SVD.}
+#'  \item{leverage}{The leverage of each observation. NULL if `method` is not PCA leverage.}
+#'  \item{robdist}{The robust distance of each observation. NULL if `method` is not robust distance (subset).}
+#'  \item{inMCD}{Whether each observation is within the MCD subset. NULL if `method` is not robust distance (subset).}
+#'  \item{outliers}{An n x 3 data.frame indicating if each observation is an outlier at each of the three levels.}
+#' }
 #' @export
 #'
 #' @import stats
@@ -19,57 +27,59 @@
 #'
 #' lev = clever(x)
 clever = function(
-  x,
-  choosePCs = c('mean','kurtosis'),
-  method = c('leverage','robdist_subset','robdist'),
-  id_out = TRUE) {
+	x,
+	choosePCs = c('mean','kurtosis'),
+	method = c('leverage','robdist_subset','robdist'),
+	id_out = TRUE) {
 
-  choosePCs <- match.arg(choosePCs) #return error if choosePCs arg not one of the acceptable options
-  method <- match.arg(method) #return error if method arg not one of the acceptable options
+	choosePCs <- match.arg(choosePCs)  # return error if choosePCs arg not one of the acceptable options
+	method <- match.arg(method)  # return error if method arg not one of the acceptable options
 
-  x <- as.matrix(x)
-  p <- ncol(x)
-  n <- nrow(x)
-  if(p < n) warning('Data matrix has more rows than columns.  Check that observations are in rows and variables are in columns.')
+	x <- as.matrix(x)
+	p <- ncol(x)
+	n <- nrow(x)
+	if(p < n) warning('Data matrix has more rows than columns. 
+		Check that observations are in rows and variables are in columns.')
 
-  #center and scale robustly
-  x <- scale_med(x)
+	# Center and scale robustly.
+	x <- scale_med(x)
 
-  #perform dimension reduction
-  XXt <- (x %*% t(x))
-  SVDi <- svd(XXt)
+	# Perform dimension reduction.
+	XXt <- (x %*% t(x))
+	SVDi <- svd(XXt)
 
-  #choose which PCs to retain
-  choosePCs_fun <- switch(choosePCs, mean=choosePCs_mean, kurtosis=choosePCs_kurtosis)
-  U <- choosePCs_fun(SVDi, method)
-  Q <- ncol(U)
+	# Choose which PCs to retain.
+	choosePCs_fun <- switch(choosePCs, mean=choosePCs_mean, kurtosis=choosePCs_kurtosis)
+	U <- choosePCs_fun(SVDi, method, id_out)  # <--return column indexes instead, so that 
+	#robust distance check can be done in clever.R after?
+	Q <- ncol(U)
 
-  #compute PCA leverage or robust distance
-  method_fun <- switch(method, leverage=PCleverage, robdist_subset=PCrobdist_subset, robdist=PCrobdist)
-  measure <- method_fun(U)
+	# Compute PCA leverage or robust distance.
+	method_fun <- switch(method, leverage=PCleverage, 
+		robdist_subset=PCrobdist_subset, robdist=PCrobdist)
+	measure <- method_fun(U)
 
-  if(method %in% c('robdist_subset','robdist')){
-    inMCD <- measure$inMCD
-    Fparam <- measure$Fparam
-    measure <- measure$robdist
-  }
+	if(method %in% c('robdist_subset','robdist')){
+		inMCD <- measure$inMCD
+		Fparam <- measure$Fparam
+		measure <- measure$robdist
+	}
 
-  params = list(choosePCs=choosePCs, method=method)
-  if(method == 'leverage'){
-    result <- list(params=params, PCs=U, leverage=measure, robdist=NULL, inMCD=NULL)
-  } else {
-    result <- list(params=params, PCs=U, leverage=NULL, robdist=measure, inMCD=inMCD)
-  }
+	params <- list(choosePCs=choosePCs, method=method)
+	if(method == 'leverage'){
+		result <- list(params=params, PCs=U, leverage=measure, robdist=NULL, inMCD=NULL, outliers=NULL)
+	} else {
+		result <- list(params=params, PCs=U, leverage=NULL, robdist=measure, inMCD=inMCD, outliers=NULL)
+	}
 
-  #label outliers
-  if(id_out){
-    if(method=='leverage') outliers <- id_out.leverage(measure)
-    if(method=='robdist_subset') outliers <- id_out.robdist_subset(measure, inMCD, Q, Fparam)
-    if(method=='robdist') outliers <- id_out.robdist(measure, inMCD, Q, Fparam)
-    result <- c(result, outliers)
-  }
+	# Label outliers, if requested.
+	if(id_out){
+		if(method=='leverage') result$outliers <- id_out.leverage(measure)
+		if(method=='robdist_subset') result$outliers <- id_out.robdist_subset(measure, inMCD, Q, Fparam)
+		if(method=='robdist') result$outliers <- id_out.robdist(measure, inMCD, Q, Fparam)
+	}
 
-  class(result) <- c('clever', class(result))
-  return(result)
+	class(result) <- c('clever', class(result))
+	return(result)
 
 }

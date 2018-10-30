@@ -2,18 +2,18 @@
 % Please edit documentation in R/rob_kurtosis.R
 \name{rob_kurtosis}
 \alias{rob_kurtosis}
-\title{Computes robust kurtosis measure of a set of values}
+\title{Computes the robust kurtosis measure of a set of values.}
 \usage{
 rob_kurtosis(x)
 }
 \arguments{
-\item{x}{vector of values}
+\item{x}{A vector of values.}
 }
 \value{
-A scalar representing the robust kurtosis
+A scalar representing the robust kurtosis.
 }
 \description{
-Computes robust kurtosis measure of a set of values
+Computes the robust kurtosis measure of a set of values.
 }
 \examples{
 n = 10

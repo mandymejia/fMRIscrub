@@ -2,25 +2,33 @@
 % Please edit documentation in R/clever.R
 \name{clever}
 \alias{clever}
-\title{Calculates PCA leverage or robust distance and identifies outliers}
+\title{Calculates PCA leverage or robust distance and identifies outliers.}
 \usage{
 clever(x, choosePCs = c("mean", "kurtosis"), method = c("leverage",
   "robdist_subset", "robdist"), id_out = TRUE)
 }
 \arguments{
-\item{x}{wide (obs x vars) data matrix of values}
+\item{x}{A wide (obs x vars) data matrix of values.}
 
-\item{choosePCs}{method to be utilized in choosing which PCs to retain}
+\item{choosePCs}{The method to be utilized in choosing which PCs to retain.}
 
-\item{method}{method to be utilized in measuring outlyingness}
+\item{method}{The method to be utilized in measuring outlyingness.}
 
-\item{id_out}{if TRUE (default), will label outliers based on leverage or distance}
+\item{id_out}{If TRUE (default), will label outliers based on leverage or distance.}
 }
 \value{
-A list containing PC scores, number of PCs retained, leverage or distance and (if id.out=TRUE) outlier indicator vectors
+A clever object, i.e. a list with components
+\describe{
+	\item{params}{A list with the `choosePCs` and `method` arguments used in the clever call.}
+ \item{PCs}{The PCs used to calculate leverage or robust distance, i.e. the subsetted U matrix from the SVD.}
+ \item{leverage}{The leverage of each observation. NULL if `method` is not PCA leverage.}
+ \item{robdist}{The robust distance of each observation. NULL if `method` is not robust distance (subset).}
+ \item{inMCD}{Whether each observation is within the MCD subset. NULL if `method` is not robust distance (subset).}
+ \item{outliers}{An n x 3 data.frame indicating if each observation is an outlier at each of the three levels.}
+}
 }
 \description{
-Calculates PCA leverage or robust distance and identifies outliers
+Calculates PCA leverage or robust distance and identifies outliers.
 }
 \examples{
 n_voxels = 1e4

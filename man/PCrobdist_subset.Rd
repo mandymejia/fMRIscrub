@@ -2,22 +2,27 @@
 % Please edit documentation in R/functions_levdist.R
 \name{PCrobdist_subset}
 \alias{PCrobdist_subset}
-\title{Computes MCD distances based on subsetting the data to reduce autocorrelation}
+\title{Computes MCD distances based on subsetting the data to reduce autocorrelation.}
 \usage{
 PCrobdist_subset(U)
 }
 \arguments{
-\item{U}{n x Q matrix of PC scores}
+\item{U}{An n x Q matrix of PC scores.}
 }
 \value{
-a vector of length n with robust distance measure for each observation
+A list with components
+\describe{
+	\item{robdist}{A vector of length n of with the robust distance estimate for each observation.}
+\item{inMCD}{A vector of length n indicating if each observation is within the MCD subset.}
+\item{Fparam}{The estimated parameters of the F distribution of MCD distances.}
+}
 }
 \description{
 fMRI timeseries data is known to exhibit autocorrelation.  The distribution
-of MCD distances assumes independent observations, so to minimize
-autocorrelation we split the data into subsets consisting of every 3rd
-observation. For fMRI data with TR of 2 seconds, this will result in
-data that is nearly independent within each subset. However, for shorter
-TR there will still be substantial autocorrelation. In this case we
-recommend using leverage rather than MCD distance.
+ of MCD distances assumes independent observations, so to minimize
+ autocorrelation we split the data into subsets consisting of every 3rd
+ observation. For fMRI data with TR of 2 seconds, this will result in
+ data that is nearly independent within each subset. However, for shorter
+ TR there will still be substantial autocorrelation. In this case we
+ recommend using leverage rather than MCD distance.
 }

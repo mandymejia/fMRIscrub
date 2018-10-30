@@ -2,19 +2,22 @@
 % Please edit documentation in R/params_F.R
 \name{fit.F}
 \alias{fit.F}
-\title{Estimates the parameters of the F distribution of MCD distances}
+\title{Estimates the parameters of the F distribution of MCD distances.}
 \usage{
 fit.F(Q, n, h)
 }
 \arguments{
-\item{Q}{number of variables in dataset used to compute MCD distances}
+\item{Q}{The number of variables in dataset used to compute MCD distances.}
 
-\item{n}{total number of observations}
+\item{n}{The total number of observations.}
 
-\item{h}{number of observations included in estimation of MCD center and scale}
+\item{h}{The number of observations included in estimation of MCD center and scale.}
+}
+\value{
+A list containing the estimated F distribution's c, m, and df.
 }
 \description{
 This estimates the parameters c and m required to determine the distribution
-of robust MCD distances as derived by Hardin and Rocke (2005), The Distribution
-of Robust Distances.
+ of robust MCD distances as derived by Hardin and Rocke (2005), The Distribution
+ of Robust Distances.
 }
