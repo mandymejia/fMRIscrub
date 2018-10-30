@@ -61,7 +61,7 @@ choosePCs_kurtosis <- function(svd, max_keep=NULL, min_keep=NULL){
 	if(!is.null(min_keep)){n_keep <- max(n_keep, min_keep)}
 
 	# The PCs with greatest kurtosis are chosen.
-	to_keep = order(-kurt)[n_keep]
+	to_keep = order(-kurt)[1:n_keep]
 	U <- U[,to_keep]
 	return(U)
 }
