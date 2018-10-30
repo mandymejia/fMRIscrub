@@ -50,8 +50,23 @@ clever = function(
 
 	# Choose which PCs to retain.
 	choosePCs_fun <- switch(choosePCs, mean=choosePCs_mean, kurtosis=choosePCs_kurtosis)
-	U <- choosePCs_fun(SVDi, method, id_out)  # <--return column indexes instead, so that 
-	#robust distance check can be done in clever.R after?
+	if((id_out == TRUE) & (method %in% c('robdist','robdist_subset'))){
+		# Let q = n_PCs/n_timepoints (ncol(U)/nrow(U)). robustbase::covMcd() 
+		#  requires q <= approx. 1/2 for computation of the MCD covariance estimate.
+		#  Higher q will use more components for estimation, thus retaining a 
+		#  higher resolution of information. Lower q will have higher breakdown 
+		#  points, thus being more resistant to outliers. (The maximal breakdown 
+		#  value is (n_PCs - n_timepoints + 2)/2.) Here, we select q = 1/3 to yield 
+		#  a breakdown value of approx. 1/3. Since the subset method splits 
+		#  n_timepoints into thirds, it must further reduce n_PCs by 1/3. 
+		q <- 1/3
+		max_keep <- max(1, floor(switch(method, 
+			robdist=nrow(U)*q, 
+			robdist_subset=nrow(U)*q/3)))
+		U <- choosePCs_fun(SVDi, max_keep=max_keep)
+	} else {
+		U <- choosePCs_fun(SVDi)
+	}
 	Q <- ncol(U)
 
 	# Compute PCA leverage or robust distance.

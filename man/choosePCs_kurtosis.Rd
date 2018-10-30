@@ -4,26 +4,20 @@
 \alias{choosePCs_kurtosis}
 \title{Selects the principle components of greatest kurtosis from a SVD.}
 \usage{
-choosePCs_kurtosis(svd, id_out = NULL, method = NULL)
+choosePCs_kurtosis(svd, max_keep = NULL, min_keep = NULL)
 }
 \arguments{
 \item{svd}{An SVD decomposition; i.e. a list containing u, d, and v.}
 
-\item{id_out}{if outliers will be identified.}
+\item{max_keep}{If specified, the total number kept will be at most this value.}
 
-\item{method}{The method which will be used to identify outliers.}
+\item{min_keep}{If specified, the total number kept will be at least this value.}
 }
 \value{
-The subsetted u matrix with only the columns (PCs) of high kurtosis.
+The subsetted u matrix with only the chosen columns (PCs).
 }
 \description{
-First, PCs with small variance are removed: as many as possible while still
-retaining 99% of the original variance. Then, at most, all PCs with kurtosis
-greater than 2 are kept. Less may be kept if outliers will be identified by
-robust distance, since n_PCs/n_timepoints < 1/2 is required to compute the
-MCD covariance estimate. (1/6 for the subset method, since the estimate is
-computed for each third of the dataset.) Furthermore, breakdown point 
-increases as n_PCs - n_timepoints decreases. We required n_PCS
-<= n_timepoints/3 to ensure computability and a maximal breakdown point of 1/3, 
-if outliers will be detected by robust distance.
+PCs with kurtosis greater than 2 are kept. The total number kept can be
+constrained within a range using the `max_keep` and min_keep` arguments.
+PCs with greater kurtosis will be prioritized for keeping.
 }

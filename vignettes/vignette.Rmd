@@ -47,7 +47,7 @@ To install the package from GitHub and load it:
 
 ```{r, warning = FALSE, message = FALSE}
 library(devtools)
-devtools::install_github('mandymejia/clever')
+devtools::install_github('damondpham/clever')
 library(clever)
 ```
 

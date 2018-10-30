@@ -34,9 +34,9 @@ plot.clever <- function(clever, log_measure = FALSE){
 		robdist_subset=clever$robdist)
 
 	# Identify outliers and their levels of outlyingness.
-	cutoffs <- clever$cutoffs
+	cutoffs <- clever$outliers$cutoffs
 	index <- 1:length(measure)
-	outliers <- clever$outliers 
+	outliers <- clever$outliers$outliers
 	outlier_level_num <- apply(outliers, 1, sum)  # get outlier levels as a single factor
 	outlier_level_names <- c('not an outlier', colnames(outliers))
 	outlier_level <- factor(outlier_level_names, 
