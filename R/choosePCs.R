@@ -65,7 +65,7 @@ choosePCs_kurtosis <- function(svd, id_out = NULL, method = NULL){
 	# First remove components that explain less than 99% of variation.
 	cumvarexp <- cumsum(svd$d/sum(svd$d))
 	keep <- min(which((cumvarexp > .99)))
-	U <- U[,keep] 
+	U <- U[,1:keep] 
 
 	# Compute kurtosis of remaining PCs.
 	kurt <- apply(U, 2, rob_kurtosis)
