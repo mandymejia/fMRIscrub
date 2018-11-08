@@ -1,8 +1,0 @@
-unnamed-chunk-2	NEW_CODE	library	miscTools	stats	robustbase	setwd	source	load
-unnamed-chunk-3	data	dat1	dat2
-unnamed-chunk-4	dim	Dat1	Dat2
-unnamed-chunk-5	clever.Dat1.mean.lev	clever	Dat1	clever.Dat1.kurt.lev	clever.Dat2.mean.lev	Dat2	clever.Dat2.kurt.lev	clever.Dat1.mean.rds	clever.Dat2.mean.rds	clever.Dat2.kurt.rds	clever.Dat1.mean.rbd	clever.Dat1.kurt.rbd	clever.Dat2.mean.rbd	clever.Dat2.kurt.rbd
-unnamed-chunk-6	Dat1.results	matrix	list	clever.Dat1.mean.lev	clever.Dat1.mean.rds	clever.Dat1.mean.rbd	clever.Dat1.kurt.lev	clever.Dat1.kurt.rbd	colnames	c	rownames	Dat2.results	clever.Dat2.mean.lev	clever.Dat2.mean.rds	clever.Dat2.mean.rbd	clever.Dat2.kurt.lev	clever.Dat2.kurt.rds	clever.Dat2.kurt.rbd
-unnamed-chunk-7	get.value	null.indices	sapply	clever.result.list	is.null	value.list	vector	length	lapply	value	any	return	classes	class	unique	stop	example	dim	null.i	which	as.data.frame	matrix	nrow	ncol	as.matrix	out	array	c	k	Dat1.outliers	Dat1.results	Dat2.outliers	Dat2.results
-unnamed-chunk-8	n	c	list	clever.Dat1.kurt.lev	clever.Dat1.kurt.rbd	clever.Dat1.mean.lev	clever.Dat1.mean.rbd	clever.Dat1.mean.rds	names	i	length	r	print	image	as.matrix	outliers
-unnamed-chunk-9	n	c	list	clever.Dat2.kurt.lev	clever.Dat2.kurt.rbd	clever.Dat2.kurt.rds	clever.Dat2.mean.lev	clever.Dat2.mean.rbd	clever.Dat2.mean.rds	names	i	length	r	print	image	as.matrix	outliers

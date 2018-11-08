@@ -18,7 +18,7 @@
 #' @export
 #'
 #' @examples
-plot.clever <- function(clever, log_measure = FALSE){
+plot.clever <- function(clever){
 	# Identify the outlier measurement.
 	choosePCs_formatted <- switch(clever$params$choosePCs,
 		kurtosis='Kurtosis',
@@ -33,14 +33,19 @@ plot.clever <- function(clever, log_measure = FALSE){
 		robdist=clever$robdist,
 		robdist_subset=clever$robdist)
 
+	#Log the y-axis if the measurement is robust distance.
+	log_measure <- switch(method,
+		leverage=FALSE,
+		robdist=TRUE,
+		robdist_subset=TRUE)
+
 	# Identify outliers and their levels of outlyingness.
 	cutoffs <- clever$outliers$cutoffs
 	index <- 1:length(measure)
 	outliers <- clever$outliers$outliers
 	outlier_level_num <- apply(outliers, 1, sum)  # get outlier levels as a single factor
 	outlier_level_names <- c('not an outlier', colnames(outliers))
-	outlier_level <- factor(outlier_level_names, 
-		levels=outlier_level_names)[outlier_level_num + 1]
+	outlier_level <- factor(outlier_level_names[outlier_level_num + 1], levels=outlier_level_names)
 	d <- data.frame(index, measure, outlier_level)
 	if(method %in% c('robdist','robdist_subset')){
 	  d$inMCD <- ifelse(clever$inMCD, 'In MCD', 'Not In MCD')
