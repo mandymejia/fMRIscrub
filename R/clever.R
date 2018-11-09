@@ -96,5 +96,3 @@ clever = function(
 
 	class(result) <- c('clever', class(result))
 	return(result)
-
-}
