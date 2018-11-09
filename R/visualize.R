@@ -93,7 +93,6 @@ plot.clever <- function(clever, ...){
 		paste0(choosePCs_formatted,', ',method_formatted))
 	xlab <- ifelse('xlab' %in% names(args), args$xlab, 'Index (Time Point)')
 	ylab <- ifelse('ylab' %in% names(args), args$ylab, method_formatted)
-
 	if(method=='leverage'){ ylim_max <- 1 } 
 	else { ylim_max <- max(d$measure) * 1.01 }
 	
@@ -113,6 +112,9 @@ plot.clever <- function(clever, ...){
 	scale_x_continuous(expand=c(0,0)) +
 	scale_y_continuous(expand=c(0,0)) +
 	ggtitle(main, subtitle=sub)
+	ggtitle(paste0('Outlier Distribution', 
+		ifelse(any_outliers, '', ' (None Identified)')),
+		subtitle=paste0(choosePCs_formatted,', ',method_formatted))
 	
 	if(method %in% c('robdist','robdist_subset')){
 		plt <- plt + facet_grid(inMCD~.)

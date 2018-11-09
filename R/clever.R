@@ -48,6 +48,7 @@ clever = function(
 	XXt <- (x %*% t(x))
 	SVDi <- svd(XXt)
 
+
 	# Choose which PCs to retain.
 	choosePCs_fun <- switch(choosePCs, mean=choosePCs_mean, kurtosis=choosePCs_kurtosis)
 	if((id_out == TRUE) & (method %in% c('robdist','robdist_subset'))){
@@ -96,5 +97,4 @@ clever = function(
 
 	class(result) <- c('clever', class(result))
 	return(result)
-
 }
