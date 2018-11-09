@@ -11,16 +11,15 @@
 #'  separately from those outside the MCD. Also, the y-axes will be log10-scaled.
 #'
 #' @param clever A clever object.
-#' @param type 'p' will create a dot plot (default); 'n' will not plot anything.
 #' @print
 #'
 #' @import ggplot2
 #' @export
 #'
 #' @examples
-plot.clever <- function(clever, type='p'){
-	# Identify the outlier measurement.
-	choosePCs_formatted <- switch(clever$params$choosePCs,
+plot.clever <- function(clever, ...){
+	choosePCs <- clever$params$choosePCs
+	choosePCs_formatted <- switch(choosePCs,
 		kurtosis='Kurtosis',
 		mean='Mean')
 	method <- clever$params$method
@@ -32,6 +31,7 @@ plot.clever <- function(clever, type='p'){
 		leverage=clever$leverage,
 		robdist=clever$robdist,
 		robdist_subset=clever$robdist)
+    args <- list(...)
 
 	#Log the y-axis if the measurement is robust distance.
 	log_measure <- switch(method,
@@ -86,6 +86,14 @@ plot.clever <- function(clever, type='p'){
 			outlier_level_num[outlier_level_num!=0]))]
 	}
 
+	main <- ifelse('main' %in% names(args), args$main, 
+		paste0('Outlier Distribution', 
+			ifelse(any_outliers, '', ' (None Identified)')))
+	sub <- ifelse('sub' %in% names(args), args$sub,
+		paste0(choosePCs_formatted,', ',method_formatted))
+	xlab <- ifelse('xlab' %in% names(args), args$xlab, 'Index (Time Point)')
+	ylab <- ifelse('ylab' %in% names(args), args$ylab, method_formatted)
+
 	if(method=='leverage'){ ylim_max <- 1 } 
 	else { ylim_max <- max(d$measure) * 1.01 }
 	
@@ -99,22 +107,21 @@ plot.clever <- function(clever, type='p'){
 	scale_color_manual(values=c('grey','black','black','black')) +
 	scale_fill_manual(values=cols) + 
 	geom_hline(yintercept=cutoffs, linetype='dashed') +
-	labs(x='Index (Time Point)', 
-		y=method_formatted, fill='Outlier Level') +
+	labs(x=xlab, y=ylab, fill='Outlier Level') +
 	coord_cartesian(xlim = c(0, max(d$index)), ylim = c(0, ylim_max)) +
 	theme_classic() +
 	scale_x_continuous(expand=c(0,0)) +
 	scale_y_continuous(expand=c(0,0)) +
-	ggtitle(paste0('Outlier Distribution', 
-		ifelse(any_outliers, '', ' (None Identified)')),
-		subtitle=paste0(choosePCs_formatted,', ',method_formatted))
+	ggtitle(main, subtitle=sub)
 	
 	if(method %in% c('robdist','robdist_subset')){
 		plt <- plt + facet_grid(inMCD~.)
 	}
 	
-	if(type == 'p'){ print(plt) }
-	else if(type != 'n'){ stop('Invalid type')}
+	if('type' %in% names(args)){
+		if(args$type == 'n'){ return(plt) }
+	}
 
+	print(plt)
 	return(plt)
 }
