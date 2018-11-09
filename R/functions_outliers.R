@@ -33,7 +33,6 @@ id_out.leverage <- function(leverage){
 #'
 #' @param distance A vector of length n with the robust distance estimate of each observation.
 #' @param inMCD A vector of length n indicating if each observation is within the MCD subset.
-#' @param Q The dimension of each observation. (Remove this?)
 #' @param Fparam The estimated parameters of the F distribution of MCD distances.
 #'
 #' @return A list with components
@@ -45,7 +44,7 @@ id_out.leverage <- function(leverage){
 #'	\item{cutoffs}{The robust distance cutoff values: the 1e-2, 1e-3, and 1e-4th quantiles}
 #' }
 #' @export
-id_out.robdist_subset <- function(distance, inMCD, Q, Fparam){
+id_out.robdist_subset <- function(distance, inMCD, Fparam){
 
 	# Distance Outliers (discontiguous time series).
 	t <- length(distance)
@@ -76,7 +75,6 @@ id_out.robdist_subset <- function(distance, inMCD, Q, Fparam){
 #'
 #' @param distance A vector of length n with the robust distance estimate of each observation.
 #' @param inMCD A vector of length n indicating if each observation is within the MCD subset.
-#' @param Q The dimension of each observation. (Remove this?)
 #' @param Fparam The estimated parameters of the F distribution of MCD distances.
 #'
 #' @return A list with components
@@ -88,7 +86,7 @@ id_out.robdist_subset <- function(distance, inMCD, Q, Fparam){
 #'	\item{cutoffs}{The robust distance cutoff values: the 1e-2, 1e-3, and 1e-4th quantiles}
 #' }
 #' @export
-id_out.robdist <- function(distance, inMCD, Q, Fparam){
+id_out.robdist <- function(distance, inMCD, Fparam){
 
 	# Distance Outliers (discontiguous time series).
 	t <- length(distance)

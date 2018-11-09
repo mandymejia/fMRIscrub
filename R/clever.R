@@ -90,8 +90,8 @@ clever = function(
 	# Label outliers, if requested.
 	if(id_out){
 		if(method=='leverage') result$outliers <- id_out.leverage(measure)
-		if(method=='robdist_subset') result$outliers <- id_out.robdist_subset(measure, inMCD, Q, Fparam)
-		if(method=='robdist') result$outliers <- id_out.robdist(measure, inMCD, Q, Fparam)
+		if(method=='robdist_subset') result$outliers <- id_out.robdist_subset(measure, inMCD, Fparam)
+		if(method=='robdist') result$outliers <- id_out.robdist(measure, inMCD, Fparam)
 	}
 
 	class(result) <- c('clever', class(result))
