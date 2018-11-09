@@ -8,17 +8,17 @@
 #'  orange and red in order of increasing outlyingness. 
 #' 
 #' If the outlyingness measure is robust distance, observations within the MCD are plotted
-#'  separately from those outside the MCD.
+#'  separately from those outside the MCD. Also, the y-axes will be log10-scaled.
 #'
 #' @param clever A clever object.
-#' @param log_measure If TRUE (default), will log10-scale the y-axis (the outlyingness
-#' measure). Vales are increased by 1 before log-transforming to ensure a positive range.
+#' @param type 'p' will create a dot plot (default); 'n' will not plot anything.
+#' @print
 #'
 #' @import ggplot2
 #' @export
 #'
 #' @examples
-plot.clever <- function(clever){
+plot.clever <- function(clever, type='p'){
 	# Identify the outlier measurement.
 	choosePCs_formatted <- switch(clever$params$choosePCs,
 		kurtosis='Kurtosis',
@@ -113,5 +113,8 @@ plot.clever <- function(clever){
 		plt <- plt + facet_grid(inMCD~.)
 	}
 	
-	print(plt)
+	if(type == 'p'){ print(plt) }
+	else if(type != 'n'){ stop('Invalid type')}
+
+	return(plt)
 }
