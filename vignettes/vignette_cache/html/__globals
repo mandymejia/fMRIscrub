@@ -1,8 +1,8 @@
-unnamed-chunk-2	NEW_CODE	library	miscTools	stats	robustbase	setwd	source	load
+unnamed-chunk-2	library	devtools	install_github	clever
 unnamed-chunk-3	data	dat1	dat2
 unnamed-chunk-4	dim	Dat1	Dat2
-unnamed-chunk-5	clever.Dat1.mean.lev	clever	Dat1	clever.Dat1.kurt.lev	clever.Dat2.mean.lev	Dat2	clever.Dat2.kurt.lev	clever.Dat1.mean.rds	clever.Dat2.mean.rds	clever.Dat2.kurt.rds	clever.Dat1.mean.rbd	clever.Dat1.kurt.rbd	clever.Dat2.mean.rbd	clever.Dat2.kurt.rbd
-unnamed-chunk-6	Dat1.results	matrix	list	clever.Dat1.mean.lev	clever.Dat1.mean.rds	clever.Dat1.mean.rbd	clever.Dat1.kurt.lev	clever.Dat1.kurt.rbd	colnames	c	rownames	Dat2.results	clever.Dat2.mean.lev	clever.Dat2.mean.rds	clever.Dat2.mean.rbd	clever.Dat2.kurt.lev	clever.Dat2.kurt.rds	clever.Dat2.kurt.rbd
-unnamed-chunk-7	get.value	null.indices	sapply	clever.result.list	is.null	value.list	vector	length	lapply	value	any	return	classes	class	unique	stop	example	dim	null.i	which	as.data.frame	matrix	nrow	ncol	as.matrix	out	array	c	k	Dat1.outliers	Dat1.results	Dat2.outliers	Dat2.results
-unnamed-chunk-8	n	c	list	clever.Dat1.kurt.lev	clever.Dat1.kurt.rbd	clever.Dat1.mean.lev	clever.Dat1.mean.rbd	clever.Dat1.mean.rds	names	i	length	r	print	image	as.matrix	outliers
-unnamed-chunk-9	n	c	list	clever.Dat2.kurt.lev	clever.Dat2.kurt.rbd	clever.Dat2.kurt.rds	clever.Dat2.mean.lev	clever.Dat2.mean.rbd	clever.Dat2.mean.rds	names	i	length	r	print	image	as.matrix	outliers
+unnamed-chunk-5	clever.Dat1.mean.lev	clever	Dat1	clever.Dat1.kurt.lev	clever.Dat1.mean.rds	clever.Dat1.kurt.rds	clever.Dat1.mean.rbd	clever.Dat1.kurt.rbd	clever.Dat2.mean.lev	Dat2	clever.Dat2.kurt.lev	clever.Dat2.mean.rds	clever.Dat2.kurt.rds	clever.Dat2.mean.rbd	clever.Dat2.kurt.rbd	clevers.Dat1	list	clevers.Dat2
+unnamed-chunk-6	library	ggpubr	gridExtra	theme_set	theme_pubr	plt_cell	vector	plt_row	j	i	plot	clevers.Dat1	r	c	T	do.call	ggarrange	grid.arrange
+unnamed-chunk-7	plt_cell	vector	plt_row	j	i	plot	clevers.Dat2	r	c	T	do.call	ggarrange	grid.arrange
+unnamed-chunk-8	library	oro.nifti	neurobase	Mask1	readNIfTI	Matrix_to_VolumeTimeSeries	t	nrow	mat	dims	c	dim	mask	in.mask	nif	array	i	return	Img1	Dat1
+unnamed-chunk-9	Volume_to_NIfTI	vol	VolumeTimeSeries	time	copyNIfTIHeader	mask	return	times	c	z	floor	dim	Mask1	plots	vector	length	i	image	Img1

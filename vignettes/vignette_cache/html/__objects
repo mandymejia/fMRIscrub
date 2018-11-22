@@ -1,8 +1,8 @@
-unnamed-chunk-2	NEW_CODE	choosePCs_kurtosis	choosePCs_mean	clever	Dat1	Dat2	fit.F	get_mad	id_out.leverage	id_out.robdist	id_out.robdist_subset	logL.F	logL.lnorm	PCleverage	PCrobdist	PCrobdist_subset	rob_kurtosis	scale_med
-unnamed-chunk-3	
+unnamed-chunk-2	
+unnamed-chunk-3	Dat1	Dat2
 unnamed-chunk-4	
-unnamed-chunk-5	clever.Dat1.kurt.lev	clever.Dat1.kurt.rbd	clever.Dat1.mean.lev	clever.Dat1.mean.rbd	clever.Dat1.mean.rds	clever.Dat2.kurt.lev	clever.Dat2.kurt.rbd	clever.Dat2.kurt.rds	clever.Dat2.mean.lev	clever.Dat2.mean.rbd	clever.Dat2.mean.rds	.Random.seed
-unnamed-chunk-6	Dat1.results	Dat2.results
-unnamed-chunk-7	Dat1.outliers	Dat2.outliers	get.value
-unnamed-chunk-8	i	n	names	r
-unnamed-chunk-9	i	n	names	r
+unnamed-chunk-5	clever.Dat1.kurt.lev	clever.Dat1.kurt.rbd	clever.Dat1.kurt.rds	clever.Dat1.mean.lev	clever.Dat1.mean.rbd	clever.Dat1.mean.rds	clever.Dat2.kurt.lev	clever.Dat2.kurt.rbd	clever.Dat2.kurt.rds	clever.Dat2.mean.lev	clever.Dat2.mean.rbd	clever.Dat2.mean.rds	clevers.Dat1	clevers.Dat2	.Random.seed
+unnamed-chunk-6	i	j	plt_cell	plt_row	r
+unnamed-chunk-7	i	j	plt_cell	plt_row	r
+unnamed-chunk-8	Img1	Mask1	Matrix_to_VolumeTimeSeries
+unnamed-chunk-9	i	plots	times	Volume_to_NIfTI	z

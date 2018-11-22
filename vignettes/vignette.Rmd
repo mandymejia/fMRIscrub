@@ -47,15 +47,14 @@ To install the package from GitHub and load it:
 
 ```{r, warning = FALSE, message = FALSE}
 library(devtools)
-devtools::install_github('damondpham/clever')
+devtools::install_github('mandymejia/clever')
 library(clever)
 ```
 
 
 ## Tutorial Data
-ABIDE is a publicly available resource of neuroimaging and phenotypic information from 1112 subjects consisting of 20 datasets collected at 16 sites (Di Martino and others, 2014). Our simulated dataset is based on resting-state fMRI scans from two subjects collected as part of the ABIDE dataset. 
+ABIDE is a publicly available resource of neuroimaging and phenotypic information from 1112 subjects consisting of 20 datasets collected at 16 sites (Di Martino and others, 2014). Our simulated dataset is based on resting-state fMRI scans from two subjects collected as part of the ABIDE dataset. The first dataset contains a number of artifacts; the second is relatively artifact-free.
  
-
 ## A Simple Example
 
 Here, we will run through a simple example. First let's pull the data, as follows:
@@ -72,29 +71,20 @@ dim(Dat1)
 dim(Dat2)
 ```
 
-TO DO:
-1. Run clever on both datasets
-  a. ID PCs with mean eigenvalues, compute leverage and distance
-  b. ID PCs with kurtosis, compute leverage and distance
-2. Identify outliers
-3. Visualize with outliers
-4. Visualize distribution of values (at least for distance)
-
-### 1
+We next run clever on both datasets using all possible combinations of parameters.
 
 ```{r}
 clever.Dat1.mean.lev = clever(Dat1)
 clever.Dat1.kurt.lev = clever(Dat1, choosePCs = 'kurtosis')
-clever.Dat2.mean.lev = clever(Dat2)
-clever.Dat2.kurt.lev = clever(Dat2, choosePCs = 'kurtosis')
-
 clever.Dat1.mean.rds = clever(Dat1, method = 'robdist_subset')
 clever.Dat1.kurt.rds = clever(Dat1, choosePCs = 'kurtosis', method = 'robdist_subset')
-clever.Dat2.mean.rds = clever(Dat2, method = 'robdist_subset')
-clever.Dat2.kurt.rds = clever(Dat2, choosePCs = 'kurtosis', method = 'robdist_subset')
-
 clever.Dat1.mean.rbd = clever(Dat1, method = 'robdist')
 clever.Dat1.kurt.rbd = clever(Dat1, choosePCs = 'kurtosis', method = 'robdist')
+
+clever.Dat2.mean.lev = clever(Dat2)
+clever.Dat2.kurt.lev = clever(Dat2, choosePCs = 'kurtosis')
+clever.Dat2.mean.rds = clever(Dat2, method = 'robdist_subset')
+clever.Dat2.kurt.rds = clever(Dat2, choosePCs = 'kurtosis', method = 'robdist_subset')
 clever.Dat2.mean.rbd = clever(Dat2, method = 'robdist')
 clever.Dat2.kurt.rbd = clever(Dat2, choosePCs = 'kurtosis', method = 'robdist')
 
@@ -103,18 +93,87 @@ clevers.Dat1 = list(clever.Dat1.mean.lev, clever.Dat1.kurt.lev, clever.Dat1.mean
 clevers.Dat2 = list(clever.Dat2.mean.lev, clever.Dat2.kurt.lev, clever.Dat2.mean.rds, clever.Dat2.kurt.rds, clever.Dat2.mean.rbd, clever.Dat2.kurt.rbd)
 ```
 
-```{r}
-for(clever in clevers.Dat1){
-  plot(clever)
-  plot(clever, log_measure = T)
+There were zero-variance voxels in both files, but neither had enough to warrant concern.
+
+Here are the outlier distributions for the first dataset:
+
+```{r fig.height=12, fig.width=8}
+library(ggpubr)
+library(gridExtra)
+theme_set(theme_pubr())
+
+plt_cell = vector('list', length=6)
+plt_row = vector('list', length=3)
+for(j in 0:2){
+  for(i in 1:2){
+    plt_cell[[j*2 + i]] = plot(clevers.Dat1[[j*2 + i]], type='n')
+  }
+  r = c(plt_cell[(j*2+1):(j*2+2)], common.legend=T, legend='bottom', align='hv', ncol=2)
+  plt_row[[j + 1]] = do.call(ggarrange, r)
 }
+
+grid.arrange(grobs=plt_row, ncol=1)
 ```
 
-```{r}
-for(clever in clevers.Dat2){
-  plot(clever)
-  plot(clever, log_measure = T)
+And for the second:
+
+```{r fig.height=12, fig.width=8}
+plt_cell = vector('list', length=6)
+plt_row = vector('list', length=3)
+for(j in 0:2){
+  for(i in 1:2){
+    plt_cell[[j*2 + i]] = plot(clevers.Dat2[[j*2 + i]], type='n')
+  }
+  r = c(plt_cell[(j*2+1):(j*2+2)], common.legend=T, legend='bottom', align='hv', ncol=2)
+  plt_row[[j + 1]] = do.call(ggarrange, r)
 }
+
+grid.arrange(grobs=plt_row, ncol=1)
 ```
 
+clever consistently identified a couple of outlier time points in the first data set. The second data set might contain a few false positives, but they are inconsistent among the different parameter settings, and of lower magnitude than those of the first dataset. These results are consistent with our prior knowledge of the datasets.
+ 
+We can reconstruct the original fMRI images with the mask used to obtain their vectorized matrix representations.
 
+```{r}
+library(oro.nifti)
+library(neurobase)
+Mask1 = readNIfTI('../data/Dat1_mask.nii.gz') #Pitt_0050048 (full of artifacts)
+
+Matrix_to_VolumeTimeSeries = function(mat, mask){
+  t = nrow(mat)
+  dims = c(dim(mask), t)
+  in.mask = mask > 0
+  nif = array(0, dim=dims)
+  #Not be enough memory for below line.
+  #nif = copyNIfTIHeader(mask, nif, drop=FALSE)
+  for(i in 1:t){
+    nif[,,,i][in.mask] = mat[i,]
+  }
+  return(nif)
+}
+
+Img1 = Matrix_to_VolumeTimeSeries(Dat1, Mask1)
+```
+
+Below, we look at the midsections for time points 20, 75, 110, 150, and 165 in the first data set. 
+
+```{r}
+#Wrapper to convert array to NIfTI, then visualize.
+Volume_to_NIfTI = function(VolumeTimeSeries, time, mask){
+  vol = VolumeTimeSeries[,,,time]
+  vol = copyNIfTIHeader(img=mask, arr=vol)
+  return(vol)
+}
+
+times = c(20,75,110,150,165) #<-- choose two: medium and highest leverage
+z = floor(dim(Mask1)[2]/2)
+plots = vector(mode='list', length(times))
+for(i in 1:length(times)){
+  image(Volume_to_NIfTI(Img1, times[i], Mask1), z=z, plane='sagittal', plot.type='single')
+}
+
+
+```
+
+The fourth, t=150, has banding artifacts, whereas the others appear normal and are nearly indistinguishable from one another by eye. This concurs with clever: t=150 was labeled as an outlier in almost all cases, whereas the other time points were not. 

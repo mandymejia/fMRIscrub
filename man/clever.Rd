@@ -10,9 +10,9 @@ clever(x, choosePCs = c("mean", "kurtosis"), method = c("leverage",
 \arguments{
 \item{x}{A wide (obs x vars) data matrix of values.}
 
-\item{choosePCs}{The method to be utilized in choosing which PCs to retain.}
+\item{choosePCs}{The method to be utilized in choosing which PCs to retain. Default is mean.}
 
-\item{method}{The method to be utilized in measuring outlyingness.}
+\item{method}{The method to be utilized in measuring outlyingness. Default is leverage.}
 
 \item{id_out}{If TRUE (default), will label outliers based on leverage or distance.}
 }

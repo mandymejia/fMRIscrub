@@ -1,8 +1,8 @@
 #' Calculates PCA leverage or robust distance and identifies outliers.
 #'
 #' @param x A wide (obs x vars) data matrix of values.
-#' @param choosePCs The method to be utilized in choosing which PCs to retain.
-#' @param method The method to be utilized in measuring outlyingness.
+#' @param choosePCs The method to be utilized in choosing which PCs to retain. Default is mean.
+#' @param method The method to be utilized in measuring outlyingness. Default is leverage.
 #' @param id_out If TRUE (default), will label outliers based on leverage or distance.
 #'
 #' @return A clever object, i.e. a list with components
@@ -89,9 +89,11 @@ clever = function(
 
 	# Label outliers, if requested.
 	if(id_out){
-		if(method=='leverage') result$outliers <- id_out.leverage(measure)
-		if(method=='robdist_subset') result$outliers <- id_out.robdist_subset(measure, inMCD, Fparam)
-		if(method=='robdist') result$outliers <- id_out.robdist(measure, inMCD, Fparam)
+		if(method=='leverage') id_out <- id_out.leverage(measure)
+		if(method=='robdist_subset') id_out <- id_out.robdist_subset(measure, inMCD, Fparam)
+		if(method=='robdist') id_out <- id_out.robdist(measure, inMCD, Fparam)
+		result$outliers <- id_out$outliers
+		result$cutoffs <- id_out$cutoffs
 	}
 
 	class(result) <- c('clever', class(result))

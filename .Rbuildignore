@@ -1,3 +1,9 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^README\.Rmd$
+
+^data-raw.*$
+^main\.R$
+^braintree-demo.RMD$
+^.*_clever.csv$
+^.*_clever.png$

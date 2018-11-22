@@ -10,27 +10,30 @@
 #' If the outlyingness measure is robust distance, observations within the MCD are plotted
 #'  separately from those outside the MCD. Also, the y-axes will be log10-scaled.
 #'
-#' @param clever A clever object.
-#' @print
+#' @param clev A clever object. 
+#' @return The clever ggplot.
 #'
 #' @import ggplot2
 #' @export
 #'
 #' @examples
-plot.clever <- function(clever, ...){
-	choosePCs <- clever$params$choosePCs
+plot.clever <- function(clev, ...){
+	choosePCs <- clev$params$choosePCs
+	method <- clev$params$method
+	measure <- switch(method,
+		leverage=clev$leverage,
+		robdist=clev$robdist,
+		robdist_subset=clev$robdist)
+	outliers <- clev$outliers
+	cutoffs <- clev$cutoffs
+
 	choosePCs_formatted <- switch(choosePCs,
 		kurtosis='Kurtosis',
 		mean='Mean')
-	method <- clever$params$method
 	method_formatted <- switch(method, 
 		leverage='Leverage',
 		robdist='Robust Distance',
 		robdist_subset='Robust Distance Subset')
-	measure <- switch(method,
-		leverage=clever$leverage,
-		robdist=clever$robdist,
-		robdist_subset=clever$robdist)
     args <- list(...)
 
 	#Log the y-axis if the measurement is robust distance.
@@ -40,15 +43,13 @@ plot.clever <- function(clever, ...){
 		robdist_subset=TRUE)
 
 	# Identify outliers and their levels of outlyingness.
-	cutoffs <- clever$outliers$cutoffs
 	index <- 1:length(measure)
-	outliers <- clever$outliers$outliers
 	outlier_level_num <- apply(outliers, 1, sum)  # get outlier levels as a single factor
 	outlier_level_names <- c('not an outlier', colnames(outliers))
 	outlier_level <- factor(outlier_level_names[outlier_level_num + 1], levels=outlier_level_names)
 	d <- data.frame(index, measure, outlier_level)
 	if(method %in% c('robdist','robdist_subset')){
-	  d$inMCD <- ifelse(clever$inMCD, 'In MCD', 'Not In MCD')
+	  d$inMCD <- ifelse(clev$inMCD, 'In MCD', 'Not In MCD')
 	}
 	
 	# The plot will have lines extending downward from outliers
@@ -112,10 +113,7 @@ plot.clever <- function(clever, ...){
 	scale_x_continuous(expand=c(0,0)) +
 	scale_y_continuous(expand=c(0,0)) +
 	ggtitle(main, subtitle=sub)
-	ggtitle(paste0('Outlier Distribution', 
-		ifelse(any_outliers, '', ' (None Identified)')),
-		subtitle=paste0(choosePCs_formatted,', ',method_formatted))
-	
+
 	if(method %in% c('robdist','robdist_subset')){
 		plt <- plt + facet_grid(inMCD~.)
 	}

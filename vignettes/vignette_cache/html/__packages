@@ -1,4 +1,11 @@
 base
 knitr
-miscTools
-robustbase
+devtools
+usethis
+clever
+ggplot2
+magrittr
+ggpubr
+gridExtra
+oro.nifti
+neurobase

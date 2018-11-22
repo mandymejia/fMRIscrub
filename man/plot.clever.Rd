@@ -4,13 +4,13 @@
 \alias{plot.clever}
 \title{Visualizes the outlier distribution of a clever object.}
 \usage{
-\method{plot}{clever}(clever, log_measure = FALSE)
+\method{plot}{clever}(clev, ...)
 }
 \arguments{
-\item{clever}{A clever object.}
-
-\item{log_measure}{If TRUE (default), will log10-scale the y-axis (the outlyingness
-measure). Vales are increased by 1 before log-transforming to ensure a positive range.}
+\item{clev}{A clever object.}
+}
+\value{
+The clever ggplot.
 }
 \description{
 Prints a dot plot of the observations (x-axis) against their outlyingness (y-axis), i.e.
@@ -22,5 +22,5 @@ Cutoffs for each outlier level are marked by horizontal dashed lines. Outliers a
  orange and red in order of increasing outlyingness.
 
 If the outlyingness measure is robust distance, observations within the MCD are plotted
- separately from those outside the MCD.
+ separately from those outside the MCD. Also, the y-axes will be log10-scaled.
 }
