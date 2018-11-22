@@ -47,7 +47,7 @@ To install the package from GitHub and load it:
 
 ```{r, warning = FALSE, message = FALSE}
 library(devtools)
-devtools::install_github('mandymejia/clever')
+devtools::install_github('damondpham/clever')
 library(clever)
 ```
 
@@ -166,7 +166,9 @@ Volume_to_NIfTI = function(VolumeTimeSeries, time, mask){
   return(vol)
 }
 
-times = c(20,75,110,150,165) #<-- choose two: medium and highest leverage
+t_med = 
+t_high = 
+times = c(t_med, t_high)
 z = floor(dim(Mask1)[2]/2)
 plots = vector(mode='list', length(times))
 for(i in 1:length(times)){
