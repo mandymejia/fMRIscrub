@@ -22,8 +22,6 @@ Citation: Mejia, Amanda F., Mary Beth Nebel, Ani Eloyan, Brian Caffo, and Martin
 
 In summary, the manuscript proposed a method to detect outlier observations in HD data by drawing on the traditional statistical ideas of PCA, leverage, and outlier detection. While the primary application is for detecting outlying time points in an fMRI scan, the method can also be applied to other forms of HD data, such as gene expression data.
 
-
-
 ## Method Outline
 
 As input, the algorithm take an __T__ x __V__ matrix, __Y__. In our case, __Y__ represents an fMRI run, where each row of __Y__ is a vectorized volume, and each column represents one timepoint. Next, the algorithm involves the following key steps: 
@@ -43,7 +41,7 @@ As input, the algorithm take an __T__ x __V__ matrix, __Y__. In our case, __Y__ 
 
 ## Installation
 
-To install the package from GitHub and load it:
+Install the package from GitHub and load it:
 
 ```{r, warning = FALSE, message = FALSE}
 library(devtools)
@@ -74,14 +72,18 @@ dim(Dat2)
 We next run clever on both datasets using all possible combinations of parameters.
 
 ```{r}
+# Show warnings just once.
 clever.Dat1.mean.lev = clever(Dat1)
+clever.Dat2.mean.lev = clever(Dat2)
+```
+
+```{r, warning = FALSE}
 clever.Dat1.kurt.lev = clever(Dat1, choosePCs = 'kurtosis')
 clever.Dat1.mean.rds = clever(Dat1, method = 'robdist_subset')
 clever.Dat1.kurt.rds = clever(Dat1, choosePCs = 'kurtosis', method = 'robdist_subset')
 clever.Dat1.mean.rbd = clever(Dat1, method = 'robdist')
 clever.Dat1.kurt.rbd = clever(Dat1, choosePCs = 'kurtosis', method = 'robdist')
 
-clever.Dat2.mean.lev = clever(Dat2)
 clever.Dat2.kurt.lev = clever(Dat2, choosePCs = 'kurtosis')
 clever.Dat2.mean.rds = clever(Dat2, method = 'robdist_subset')
 clever.Dat2.kurt.rds = clever(Dat2, choosePCs = 'kurtosis', method = 'robdist_subset')
@@ -93,7 +95,7 @@ clevers.Dat1 = list(clever.Dat1.mean.lev, clever.Dat1.kurt.lev, clever.Dat1.mean
 clevers.Dat2 = list(clever.Dat2.mean.lev, clever.Dat2.kurt.lev, clever.Dat2.mean.rds, clever.Dat2.kurt.rds, clever.Dat2.mean.rbd, clever.Dat2.kurt.rbd)
 ```
 
-There were zero-variance voxels in both files, but neither had enough to warrant concern.
+There were zero-variance voxels in both files, but neither had so much as to warrant concern.
 
 Here are the outlier distributions for the first dataset:
 
@@ -131,9 +133,9 @@ for(j in 0:2){
 grid.arrange(grobs=plt_row, ncol=1)
 ```
 
-clever consistently identified a couple of outlier time points in the first data set. The second data set might contain a few false positives, but they are inconsistent among the different parameter settings, and of lower magnitude than those of the first dataset. These results are consistent with our prior knowledge of the datasets.
- 
-We can reconstruct the original fMRI images with the mask used to obtain their vectorized matrix representations.
+For the first dataset, clever identifies a few outlying time ranges consistently across all parameter settings. The exception is kurtosis and leverage, where the same time ranges do have high leverage, but are not labeled as outliers since they do not surpass the cutoffs. For the second dataset, some parameter settings identify a handful of outliers, but most do not. Of those outliers identified, their time ranges are not consistent, and their outlyingness measures are fairly low. Overall, these results are consistent with our prior knowledge of both datasets. 
+
+In fact, We can reconstruct the original fMRI images with the mask used to obtain their vectorized matrix representations.
 
 ```{r}
 library(oro.nifti)
@@ -156,7 +158,7 @@ Matrix_to_VolumeTimeSeries = function(mat, mask){
 Img1 = Matrix_to_VolumeTimeSeries(Dat1, Mask1)
 ```
 
-Below, we look at the midsections for time points 20, 75, 110, 150, and 165 in the first data set. 
+Below, we look at sagittal midsections of the first data set. We will compare the timepoint of median leverage (first) to the timepoint of maximum leverage (second), as measured with the mean + leverage parameter settings.
 
 ```{r}
 #Wrapper to convert array to NIfTI, then visualize.
@@ -166,16 +168,15 @@ Volume_to_NIfTI = function(VolumeTimeSeries, time, mask){
   return(vol)
 }
 
-t_med = 
-t_high = 
+levs = clever.Dat1.mean.lev$leverage
+t_med = order(levs)[ceiling(length(levs)/2)]
+t_high = which.max(levs)
 times = c(t_med, t_high)
 z = floor(dim(Mask1)[2]/2)
 plots = vector(mode='list', length(times))
 for(i in 1:length(times)){
   image(Volume_to_NIfTI(Img1, times[i], Mask1), z=z, plane='sagittal', plot.type='single')
 }
-
-
 ```
 
-The fourth, t=150, has banding artifacts, whereas the others appear normal and are nearly indistinguishable from one another by eye. This concurs with clever: t=150 was labeled as an outlier in almost all cases, whereas the other time points were not. 
+The median time point appears normal, whereas the most outlying time point clearly has banding artifacts.
