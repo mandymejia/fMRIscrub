@@ -24,16 +24,13 @@ plot.clever <- function(clev, ...){
 		leverage=clev$leverage,
 		robdist=clev$robdist,
 		robdist_subset=clev$robdist)
+  
 	outliers <- clev$outliers
 	cutoffs <- clev$cutoffs
-
-	choosePCs_formatted <- switch(choosePCs,
-		kurtosis='Kurtosis',
-		mean='Mean')
-	method_formatted <- switch(method, 
-		leverage='Leverage',
-		robdist='Robust Distance',
-		robdist_subset='Robust Distance Subset')
+	measure <- switch(method,
+		leverage=clever$leverage,
+		robdist=clever$robdist,
+		robdist_subset=clever$robdist)
     args <- list(...)
 
 	#Log the y-axis if the measurement is robust distance.
@@ -113,7 +110,7 @@ plot.clever <- function(clev, ...){
 	scale_x_continuous(expand=c(0,0)) +
 	scale_y_continuous(expand=c(0,0)) +
 	ggtitle(main, subtitle=sub)
-
+	
 	if(method %in% c('robdist','robdist_subset')){
 		plt <- plt + facet_grid(inMCD~.)
 	}
