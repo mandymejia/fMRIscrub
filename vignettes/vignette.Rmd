@@ -69,12 +69,11 @@ dim(Dat2)
 We next run clever on both datasets using all possible combinations of parameters.
 
 ```{r}
-# Show warnings just once.
 clever.Dat1.mean.lev = clever(Dat1)
 clever.Dat2.mean.lev = clever(Dat2)
 ```
 
-```{r, warning = FALSE, message = FALSE, include = FALSE}
+```{r, warning = FALSE, message = FALSE}
 clever.Dat1.kurt.lev = clever(Dat1, choosePCs = 'kurtosis')
 clever.Dat1.mean.rds = clever(Dat1, method = 'robdist_subset')
 clever.Dat1.kurt.rds = clever(Dat1, choosePCs = 'kurtosis', method = 'robdist_subset')
@@ -96,7 +95,7 @@ There were zero-variance voxels in both files, but neither had so much as to war
 
 Here are the outlier distributions for the first dataset:
 
-```{r include=FALSE, message=FALSE}
+```{r warning=FALSE, message=FALSE}
 library(ggpubr)
 library(gridExtra)
 ```
@@ -139,7 +138,7 @@ For the first dataset, clever identifies a few outlying time ranges consistently
 
 In fact, We can reconstruct the original fMRI images with the mask used to obtain their vectorized matrix representations.
 
-```{r warning=FALSE, include=FALSE}
+```{r warning=FALSE}
 library(oro.nifti)
 library(neurobase)
 ```
