@@ -82,9 +82,11 @@ clever = function(
 
 	params <- list(choosePCs=choosePCs, method=method)
 	if(method == 'leverage'){
-		result <- list(params=params, PCs=U, leverage=measure, robdist=NULL, inMCD=NULL, outliers=NULL)
+		result <- list(params=params, PCs=U, leverage=measure, robdist=NULL, 
+			inMCD=NULL, outliers=NULL, cutoffs=NULL)
 	} else {
-		result <- list(params=params, PCs=U, leverage=NULL, robdist=measure, inMCD=inMCD, outliers=NULL)
+		result <- list(params=params, PCs=U, leverage=NULL, robdist=measure, 
+			inMCD=inMCD, outliers=NULL, cutoffs=NULL)
 	}
 
 	# Label outliers, if requested.
