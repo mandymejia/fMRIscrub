@@ -25,12 +25,12 @@ scale_med <- function(mat){
 			warning(cat("Warning: ", sum(zero_mad),
 				" zero-variance voxels (out of ", length(zero_mad),
 				"). These will be set to zero for estimation of the covariance.\n", sep=""))
-			mad <- ifelse(mad == 0, Inf, mad) # Will divide by mad: division by Inf yields zero.
 		}
 	}
-	
+
 	# Scale.
-	mat_scaled <- sweep(mat, 2, mad, '/')
+	scale_col <- function(col, v){ return(ifelse(v != 0, col/v, 0)) }
+	mat_scaled <- sweep(mat, 2, mad, scale_col)
 	return(mat_scaled)
 }
 
