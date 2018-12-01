@@ -25,6 +25,7 @@ scale_med <- function(mat){
 			warning(cat("Warning: ", sum(zero_mad),
 				" zero-variance voxels (out of ", length(zero_mad),
 				"). These will be set to zero for estimation of the covariance.\n", sep=""))
+			mad <- ifelse(mad == 0, Inf, mad) # Will divide by mad: division by Inf yields zero.
 		}
 	}
 	
