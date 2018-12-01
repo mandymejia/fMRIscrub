@@ -13,10 +13,7 @@ scale_med <- function(mat){
 	p <- ncol(mat)
 
 	ctr <- colMedians(mat, na.rm=TRUE)
-	ctr_mat <- matrix(ctr, nrow=n, ncol=p, byrow=TRUE)
-
-	mad <- 1.4826 * colMedians(abs(mat - ctr_mat), na.rm=TRUE)
-	mad_mat <- matrix(mad, nrow=n, ncol=p, byrow=TRUE)
+	mad <- 1.4826 * colMedians(abs(t(t(mat) - ctr)), na.rm=TRUE)
 
 	# Check for voxels with MAD == 0.
 	zero_mad <- mad == 0
@@ -30,7 +27,7 @@ scale_med <- function(mat){
 		}
 	}
 
-	mat_scaled <- ifelse(mad_mat == 0, 0, (mat - ctr_mat)/mad_mat)
+	mat_scaled <- t((t(mat)-ctr)/mad)
 	return(mat_scaled)
 }
 
