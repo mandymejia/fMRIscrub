@@ -4,7 +4,7 @@
 \alias{plot.clever}
 \title{Visualizes the outlier distribution of a clever object.}
 \usage{
-\method{plot}{clever}(clev, ...)
+plot.clever(clev, ...)
 }
 \arguments{
 \item{clev}{A clever object.}

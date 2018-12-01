@@ -11,8 +11,6 @@ id_out.robdist_subset(distance, inMCD, Fparam)
 
 \item{inMCD}{A vector of length n indicating if each observation is within the MCD subset.}
 
-\item{Q}{The dimension of each observation. (Remove this?)}
-
 \item{Fparam}{The estimated parameters of the F distribution of MCD distances.}
 }
 \value{
