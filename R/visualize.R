@@ -19,18 +19,20 @@
 #' @examples
 plot.clever <- function(clev, ...){
 	choosePCs <- clev$params$choosePCs
+	choosePCs_formatted <- switch(choosePCs,
+		mean='Mean',
+		kurtosis='Kurtosis')
 	method <- clev$params$method
+	method_formatted <- switch(method,
+		leverage='Leverage',
+		robdist='Robust Distance',
+		robdist_subset='Robust Distance Subset')
 	measure <- switch(method,
 		leverage=clev$leverage,
 		robdist=clev$robdist,
 		robdist_subset=clev$robdist)
-  
 	outliers <- clev$outliers
 	cutoffs <- clev$cutoffs
-	measure <- switch(method,
-		leverage=clever$leverage,
-		robdist=clever$robdist,
-		robdist_subset=clever$robdist)
     args <- list(...)
 
 	#Log the y-axis if the measurement is robust distance.
