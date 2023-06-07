@@ -1,3 +1,7 @@
+# 0.13.0
+
+* Robust outlier detection methods: `robdist.R` and `SHASH.R`
+
 # 0.12.1
 
 * Use `fMRItools` where possible and remove duplicated functions from here.
