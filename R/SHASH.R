@@ -58,7 +58,7 @@ SHASH_to_normal <- function(x, mu, sigma, nu, tau, inverse = FALSE){
 #'
 #' @export
 #'
-SHASH_out <- function(x, maxit = 100, MAD_thr = 4, weight_init = NULL){
+SHASH_out <- function(x, maxit = 20, MAD_thr = 3, weight_init = NULL){
   nL <- length(x)
   if(is.null(weight_init)){
     weight_new <- rep(TRUE, nL) # TRUE if not an outlier
@@ -87,10 +87,7 @@ SHASH_out <- function(x, maxit = 100, MAD_thr = 4, weight_init = NULL){
       inverse = FALSE
     )
 
-    # x_norm_med <- median(x_norm)
-
     # Detect outliers.
-    # MAD = (1.4826) * median(abs(x_norm - x_norm_med))
     lim_left = - 4
     lim_right = 4
     weight_new <- (x_norm > lim_left) & (x_norm < lim_right) # TRUE for non-outliers
@@ -119,12 +116,12 @@ SHASH_out <- function(x, maxit = 100, MAD_thr = 4, weight_init = NULL){
 }
 
 #' Robust empirical rule
-#' 
+#'
 #' Robust empirical rule outlier detection applicable to approximately Normal data
-#' 
+#'
 #' @param x The data
 #' @param thr MAD threshold
-#' 
+#'
 #' @return Logical vector indicating whether each element in \code{x} is an
 #'  outlier (\code{TRUE} if an outlier).
 #' @keywords internal
@@ -134,5 +131,5 @@ emprule_rob <- function(x, thr=4){
   MAD = (1.4826) * median(abs(x - x_med))
   lim_left = x_med - thr * MAD
   lim_right = x_med + thr * MAD
-  out <- (x < lim_left) | (x > lim_right) 
+  out <- (x < lim_left) | (x > lim_right)
 }
