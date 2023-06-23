@@ -150,7 +150,7 @@ emprule_rob <- function(x, thr=4){
   lim_left = x_med - thr * MAD
   lim_right = x_med + thr * MAD
   out <- (x < lim_left) | (x > lim_right)
-<<<<<<< HEAD
+
 }
 # =======
 # }
