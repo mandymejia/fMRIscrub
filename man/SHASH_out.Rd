@@ -4,7 +4,7 @@
 \alias{SHASH_out}
 \title{Robust outlier detection based on SHASH distribution}
 \usage{
-SHASH_out(x, maxit = 100, out_lim = 4, weight_init = NULL)
+SHASH_out(x, maxit = 20, out_lim = 3, weight_init = NULL)
 }
 \arguments{
 \item{x}{The numeric vector in which to detect outliers.}

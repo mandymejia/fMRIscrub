@@ -60,12 +60,15 @@ SHASH_to_normal <- function(x, mu, sigma, nu, tau, inverse = FALSE){
 #'
 #' @export
 #'
+# <<<<<<< HEAD
+# SHASH_out <- function(x, maxit = 20, MAD_thr = 3, weight_init = NULL){
+# =======
 #' @examples
 #' x <- rnorm(100) + (seq(100)/200)
 #' x[77] <- 13
 #' SHASH_out(x)
 #'
-SHASH_out <- function(x, maxit = 100, out_lim = 4, weight_init = NULL){
+SHASH_out <- function(x, maxit = 20, out_lim = 3, weight_init = NULL){
   nL <- length(x)
   if(is.null(weight_init)){
     weight_new <- rep(TRUE, nL) # TRUE if not an outlier
@@ -95,9 +98,15 @@ SHASH_out <- function(x, maxit = 100, out_lim = 4, weight_init = NULL){
     )
 
     # Detect outliers.
+# <<<<<<< HEAD
+#     lim_left = - 4
+#     lim_right = 4
+#     weight_new <- (x_norm > lim_left) & (x_norm < lim_right) # TRUE for non-outliers
+# =======
     # x_norm_med <- median(x_norm)
     # MAD = (1.4826) * median(abs(x_norm - x_norm_med))
     weight_new <- (x_norm > -out_lim) & (x_norm < out_lim) # TRUE for non-outliers
+# >>>>>>> 48f1140c68097e14ec7efe5ada32efbc00fb8142
 
     # Log outliers on `indx_iters`.
     indx_iters[, iter] = 1 - weight_new
@@ -141,4 +150,8 @@ emprule_rob <- function(x, thr=4){
   lim_left = x_med - thr * MAD
   lim_right = x_med + thr * MAD
   out <- (x < lim_left) | (x > lim_right)
+
 }
+# =======
+# }
+# >>>>>>> 48f1140c68097e14ec7efe5ada32efbc00fb8142
