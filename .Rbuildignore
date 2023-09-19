@@ -10,3 +10,4 @@
 ^codecov\.yml$
 ^CRAN-SUBMISSION$
 ^R/fusedPCA\.R$
+^R/kurtosis_rob\.R$
