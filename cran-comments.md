@@ -14,10 +14,3 @@ None.
 ## Tests
 
 Passes all the tests in `tests/testthat.R`.
-
-## Previous submission results (13.0)
-
-   Package CITATION file contains call(s) to old-style personList() or
-   as.personList().  Please use c() on person objects instead.
-
-Done!
