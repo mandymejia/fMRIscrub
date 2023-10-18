@@ -81,9 +81,10 @@
 #'
 #' @examples
 #' library(fastICA)
-#' n_voxels = 2e3
-#' n_timepoints = 35
-#' X = matrix(rnorm(n_timepoints*n_voxels), ncol = n_voxels)
+#' nVox <- 1000
+#' nTime <- 77
+#' X <- Dat1[,apply(abs(Dat1), 2, max)>0]
+#' X <- Dat1[seq(nTime),seq(nVox)]
 #'
 #' psx = pscrub(X)
 pscrub = function(

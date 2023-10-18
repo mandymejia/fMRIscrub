@@ -10,8 +10,6 @@ RD_impData(data, univOut)
 \item{data}{The data}
 
 \item{univOut}{The univariate outliers}
-
-\item{cutoff}{Default: \code{4}}
 }
 \value{
 The data with imputed outliers.

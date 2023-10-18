@@ -91,7 +91,6 @@ RD_univOut <- function(
 #'
 #' @param data The data
 #' @param univOut The univariate outliers
-#' @param cutoff Default: \code{4}
 #'
 #' @keywords internal
 #' @return The data with imputed outliers.
@@ -168,9 +167,10 @@ RD_impData <- function(data, univOut){
 #'
 #' @examples
 #' library(fastICA)
-#' n_voxels = 2e3
-#' n_timepoints = 35
-#' X = matrix(rnorm(n_timepoints*n_voxels), ncol = n_voxels)
+#' nVox <- 1000
+#' nTime <- 77
+#' X <- Dat1[,apply(abs(Dat1), 2, max)>0]
+#' X <- Dat1[seq(nTime),seq(nVox)]
 #'
 #' rdx = robdist(X)
 robdist = function(
