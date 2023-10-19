@@ -14,3 +14,7 @@ None.
 ## Tests
 
 Passes all the tests in `tests/testthat.R`.
+
+## Previous submission
+
+0.14.0 Had issues where the examples fail due to the BLAS library on some dev environments, so the examples have been disabled.

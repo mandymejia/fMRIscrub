@@ -150,11 +150,8 @@ A \code{"robdist"} object, i.e. a list with components
 Scrubbing with robust distance.
 }
 \examples{
+\dontrun{
 library(fastICA)
-nVox <- 1000
-nTime <- 77
-X <- Dat1[,apply(abs(Dat1), 2, max)>0]
-X <- Dat1[seq(nTime),seq(nVox)]
-
-rdx = robdist(X)
+rdx = robdist(Dat1)
+}
 }

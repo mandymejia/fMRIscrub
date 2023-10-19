@@ -42,6 +42,7 @@ fusedPCA_check_kwargs <- function(X, X.svd, solve_directions, K, lambda, niter_m
 #' @return SVD The fused SVD decomposition of X (list with u, d, v).
 #' 
 #' @examples
+#' \dontrun{
 #' if (requireNamespace("glmgen", quietly = TRUE)) {
 #'  U = matrix(rnorm(100*3),ncol=3)
 #'  U[20:23,1] = U[20:23,1] + 3
@@ -60,6 +61,7 @@ fusedPCA_check_kwargs <- function(X, X.svd, solve_directions, K, lambda, niter_m
 #'  matplot(out3_svd$u, ty='l')
 #'  out3_svd$d
 #'  plot(rowSums(out3_svd$u^2), ty='l')
+#' }
 #' }
 #' @export
 #' 

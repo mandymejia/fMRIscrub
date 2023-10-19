@@ -178,11 +178,8 @@ outline of the algorithm: \code{vignette("projection_scrubbing", package="fMRIsc
 }
 
 \examples{
+\dontrun{
 library(fastICA)
-nVox <- 1000
-nTime <- 77
-X <- Dat1[,apply(abs(Dat1), 2, max)>0]
-X <- Dat1[seq(nTime),seq(nVox)]
-
-psx = pscrub(X)
+psx = pscrub(Dat1)
+}
 }

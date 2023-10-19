@@ -166,13 +166,10 @@ RD_impData <- function(data, univOut){
 #' @importFrom fMRItools is_1
 #'
 #' @examples
+#' \dontrun{
 #' library(fastICA)
-#' nVox <- 1000
-#' nTime <- 77
-#' X <- Dat1[,apply(abs(Dat1), 2, max)>0]
-#' X <- Dat1[seq(nTime),seq(nVox)]
-#'
-#' rdx = robdist(X)
+#' rdx = robdist(Dat1)
+#' }
 robdist = function(
   X,
   RD_cutoff = 4,
