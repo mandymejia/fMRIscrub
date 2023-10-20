@@ -92,7 +92,7 @@ pscrub_multi = function(
   center=TRUE, scale=TRUE, comps_mean_dt=FALSE, comps_var_dt=FALSE,
   kurt_quantile=.99, #fusedPCA_kwargs=NULL,
   get_dirs=FALSE, full_PCA=FALSE,
-  get_outliers=TRUE, cutoff=4, seed=0,
+  get_outliers=TRUE, cutoff=4, seed=0, ICA_method=c("C", "R"),
   verbose=FALSE){
 
   # ----------------------------------------------------------------------------
@@ -108,6 +108,7 @@ pscrub_multi = function(
   stopifnot(is_1(get_outliers, "logical"))
   stopifnot(is_1(cutoff, "numeric") && cutoff==round(cutoff))
   stopifnot(is_1(verbose, "logical"))
+  ICA_method <- match.arg(ICA_method, c("C", "R"))
 
   # `X` ------------------------------------------------------------------------
   if (verbose) { cat("Checking for missing, infinite, and constant data.\n") }
@@ -400,9 +401,9 @@ pscrub_multi = function(
       stop("Package \"fastICA\" needed to compute the ICA. Please install it.", call. = FALSE)
     }
     if (!is.null(seed)) {
-      out$ICA <- with(set.seed(seed), fastICA::fastICA(t(X), maxK_ICA, method="C"))[c("S", "A")]
+      out$ICA <- with(set.seed(seed), fastICA::fastICA(t(X), maxK_ICA, method=ICA_method))[c("S", "A")]
     } else {
-      out$ICA <- fastICA::fastICA(t(X), maxK_ICA, method="C")[c("S", "A")]
+      out$ICA <- fastICA::fastICA(t(X), maxK_ICA, method=ICA_method)[c("S", "A")]
     }
     names(out$ICA)[names(out$ICA)=="A"] <- "M"
     out$ICA$M <- t(out$ICA$M)

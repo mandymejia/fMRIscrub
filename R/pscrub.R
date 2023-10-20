@@ -80,10 +80,8 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' library(fastICA)
-#' psx = pscrub(Dat1)
-#' }
+#' psx = pscrub(Dat1, ICA_method="R")
 pscrub = function(
   X, projection=c(
     "ICA", 
@@ -95,7 +93,7 @@ pscrub = function(
   PESEL=TRUE, kurt_quantile=.99, 
   #fusedPCA_kwargs=NULL, 
   get_dirs=FALSE, full_PCA=FALSE,
-  get_outliers=TRUE, cutoff=4, seed=0,
+  get_outliers=TRUE, cutoff=4, seed=0, ICA_method=c("C", "R"),
   verbose=FALSE){
   
   projection <- match.arg(projection, c(

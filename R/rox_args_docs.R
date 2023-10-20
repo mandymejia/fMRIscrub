@@ -83,6 +83,8 @@
 #' @param seed Set a seed right before the call to \code{pesel::pesel} or 
 #'  \code{ica::icaimax}? If \code{NULL}, do not set a seed. If numeric (default:
 #'  \code{0}), will use as the seed.
+#' @param ICA_method The \code{method} argument to \code{fastICA}: \code{"C"} to
+#'  use C code with BLAS (default), or \code{"R"} to use R code.
 #'
 #' @name pscrub_Params
 #' @keywords internal

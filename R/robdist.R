@@ -166,10 +166,8 @@ RD_impData <- function(data, univOut){
 #' @importFrom fMRItools is_1
 #'
 #' @examples
-#' \dontrun{
 #' library(fastICA)
 #' rdx = robdist(Dat1)
-#' }
 robdist = function(
   X,
   RD_cutoff = 4,
@@ -187,7 +185,7 @@ robdist = function(
   PESEL=TRUE, kurt_quantile=.99,
   #fusedPCA_kwargs=NULL,
   get_dirs=FALSE, full_PCA=FALSE,
-  get_outliers=TRUE, cutoff=4, seed=0,
+  get_outliers=TRUE, cutoff=4, seed=0, ICA_method=c("C", "R"),
   skip_dimred=FALSE,
   verbose=FALSE){
 
@@ -208,6 +206,7 @@ robdist = function(
       #fusedPCA_kwargs=fusedPCA_kwargs,
       get_dirs=get_dirs, full_PCA=full_PCA,
       get_outliers=get_outliers, cutoff=cutoff, seed=seed,
+      ICA_method=ICA_method,
       verbose=verbose
     )
 
