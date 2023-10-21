@@ -17,4 +17,4 @@ Passes all the tests in `tests/testthat.R`.
 
 ## Previous submission
 
-0.14.1 Had issues where the tests/examples fail due to the BLAS library on some dev environments, so I set a new argument to control whether R or C is used. C is used by default, but the tests will use R. 
+0.14.3 Had issues where the `ICA_method` argument was not being sent to `pscrub_multi`; this is fixed. Some tests were not setting `ICA_method` to `"R"`, so this is fixed too.

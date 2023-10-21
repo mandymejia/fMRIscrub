@@ -16,7 +16,7 @@ test_that("pscrub works", {
   ))
   myplot <- fMRIscrub:::plot.scrub_projection_multi(psx, title = "My Plot")
 
-  psx <- testthat::expect_warning(pscrub(Dat1))
+  psx <- testthat::expect_warning(pscrub(Dat1, ICA_method="R"))
   plot(psx)
 
   # psx <- pscrub(

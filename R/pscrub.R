@@ -111,7 +111,7 @@ pscrub = function(
     kurt_quantile=kurt_quantile, 
     #fusedPCA_kwargs=fusedPCA_kwargs,
     get_dirs=get_dirs, full_PCA=full_PCA,
-    get_outliers=get_outliers, cutoff=cutoff, seed=seed,
+    get_outliers=get_outliers, cutoff=cutoff, seed=seed, ICA_method=ICA_method,
     verbose=verbose
   )
 
