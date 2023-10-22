@@ -155,5 +155,5 @@ Scrubbing with robust distance.
 }
 \examples{
 library(fastICA)
-rdx = robdist(Dat1)
+rdx = robdist(Dat1[seq(70),seq(800,950)])
 }

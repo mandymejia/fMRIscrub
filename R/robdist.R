@@ -20,6 +20,7 @@ RD_meas <- function(data, ind_incld, dist=TRUE){
   xbar_star <- colMeans(data_incld)
   sc_data_incld <- scale(data_incld,  center = TRUE, scale = FALSE)
   S_star <- (t(sc_data_incld) %*% sc_data_incld) / (h-1)
+  # [TO DO] if singular? example: robdist(Dat1[seq(70),seq(1000)])
   invcov <- solve(S_star)
   invcov_sqrt <- sqrtm(invcov)
 
@@ -167,7 +168,7 @@ RD_impData <- function(data, univOut){
 #'
 #' @examples
 #' library(fastICA)
-#' rdx = robdist(Dat1)
+#' rdx = robdist(Dat1[seq(70),seq(800,950)])
 robdist = function(
   X,
   RD_cutoff = 4,

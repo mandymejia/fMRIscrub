@@ -17,4 +17,4 @@ Passes all the tests in `tests/testthat.R`.
 
 ## Previous submission
 
-0.14.3 Had issues where the `ICA_method` argument was not being sent to `pscrub_multi`; this is fixed. Some tests were not setting `ICA_method` to `"R"`, so this is fixed too.
+0.14.4 Had a test that took too long, so the size of the data has been reduced.

@@ -81,7 +81,7 @@
 #'
 #' @examples
 #' library(fastICA)
-#' psx = pscrub(Dat1, ICA_method="R")
+#' psx = pscrub(Dat1[seq(70),seq(800,950)], ICA_method="R")
 pscrub = function(
   X, projection=c(
     "ICA", 
