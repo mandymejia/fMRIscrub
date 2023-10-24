@@ -17,4 +17,4 @@ Passes all the tests in `tests/testthat.R`.
 
 ## Previous submission
 
-0.14.4 Had a test that took too long, so the size of the data has been reduced.
+0.14.4 Failed tests using `rnorm` so these have been replaced with tests using `Dat1`.

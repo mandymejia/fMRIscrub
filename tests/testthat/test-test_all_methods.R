@@ -25,14 +25,9 @@ test_that("pscrub works", {
   # )
   # plot(psx)
 
-  psx <- testthat::expect_warning(pscrub(
-    matrix(rnorm(10000), ncol=50), ICA_method="R"
-  ))
+  psx <- testthat::expect_warning(pscrub(Dat1, ICA_method="R"))
 
-  psx <- testthat::expect_warning(pscrub(
-    matrix(rnorm(10000), nrow=100) + 100, nuisance=fMRItools::dct_bases(100, 2),
-    ICA_method="R"
-  ))
+  psx <- testthat::expect_warning(pscrub(Dat1, nuisance=fMRItools::dct_bases(nrow(Dat1), 2), ICA_method="R"))
 
   psx <- testthat::expect_warning(pscrub(
     Dat2, projection="PCA", nuisance=cbind(1, fMRItools::dct_bases(nrow(Dat2), 12)),
