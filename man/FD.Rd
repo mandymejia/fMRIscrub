@@ -33,15 +33,12 @@ or one of the \code{trans_units} options.}
 
 \item{brain_radius}{If \code{rot_units} measures an angle (i.e. if it's
 \code{"deg"} or \code{"rad"}), the rotational RPs are transformed to a
-measurement representing the displacement on a sphere of radius
-\code{brain_radius} \code{trans_units}. So this argument should give the
-radius of the brain, in the units of \code{trans_units}.
+measure of the displacement on a sphere of radius \code{brain_radius}
+\code{trans_units}. So this argument should give the radius of the brain,
+in the units of \code{trans_units}. If \code{NULL} (default),
+\code{brain_radius} will be set to 50 mm (or 5 cm, or 50/25.4 inches).
 
-If \code{brain_radius} is \code{NULL} (default), it will be set to
-50 mm (regardless of \code{trans_units}).
-
-If \code{rot_units} does not measure an angle, this argument is completely
-ignored.}
+If \code{rot_units} does not measure an angle, this argument is ignored.}
 
 \item{detrend}{Detrend each RP with the DCT before computing FD?
 Default: \code{FALSE}. Can be a number of DCT bases to use, or \code{TRUE}

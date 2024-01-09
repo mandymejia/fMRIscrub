@@ -26,15 +26,12 @@
 #'  or one of the \code{trans_units} options.
 #' @param brain_radius If \code{rot_units} measures an angle (i.e. if it's
 #'  \code{"deg"} or \code{"rad"}), the rotational RPs are transformed to a 
-#'  measurement representing the displacement on a sphere of radius 
-#'  \code{brain_radius} \code{trans_units}. So this argument should give the
-#'  radius of the brain, in the units of \code{trans_units}.
+#'  measure of the displacement on a sphere of radius \code{brain_radius} 
+#'  \code{trans_units}. So this argument should give the radius of the brain, 
+#'  in the units of \code{trans_units}. If \code{NULL} (default), 
+#'  \code{brain_radius} will be set to 50 mm (or 5 cm, or 50/25.4 inches).
 #' 
-#'  If \code{brain_radius} is \code{NULL} (default), it will be set to 
-#'  50 mm (regardless of \code{trans_units}).
-#' 
-#'  If \code{rot_units} does not measure an angle, this argument is completely
-#'  ignored.
+#'  If \code{rot_units} does not measure an angle, this argument is ignored.
 #' @param detrend Detrend each RP with the DCT before computing FD?
 #'  Default: \code{FALSE}. Can be a number of DCT bases to use, or \code{TRUE}
 #'  to use 4.
@@ -77,19 +74,19 @@ FD <- function(
     X <- X[,1:6]
   }
 
-  # Convert RPs and brain radius to mm.
-  # Note that brain radius will only actually be used if `rot_units` measures an
-  #   angle.
+  # Convert translational RPs to mm.
   trans_units <- match.arg(trans_units, trans_units)
   X[,1:3] <- X[,1:3] * switch(trans_units, mm=1, cm=10, `in`=25.4)
 
+  # Convert rotational RPs to mm.
+  # Get the brain radius. Note that this is actually only used if `rot_units`
+  #   measures an angle.
   if (!is.null(brain_radius)) {
     brain_radius <- brain_radius * switch(trans_units, mm=1, cm=10, `in`=25.4)
   } else {
     brain_radius <- 50
   }
-
-  # Convert `rot_units` to mm.
+  # Convert.
   rot_units <- match.arg(rot_units, rot_units)
   X[,4:6] <- X[,4:6] * switch(rot_units, 
     rad=brain_radius, deg=brain_radius*2*pi/360, 
