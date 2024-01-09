@@ -11,7 +11,7 @@ FD(
   brain_radius = NULL,
   detrend = FALSE,
   lag = 1,
-  cutoff = 0.3
+  cutoff = 0.4
 )
 }
 \arguments{
@@ -31,12 +31,17 @@ for centimeters, or \code{"in"} for inches.}
 \item{rot_units}{\code{"deg"} for degrees (default), \code{"rad"} for radians,
 or one of the \code{trans_units} options.}
 
-\item{brain_radius}{If \code{rot_units} measures an angle, the rotational RPs
-are transformed to a spatial measurement representing the displacement on a
-sphere of radius \code{brain_radius} \code{trans_units}.
+\item{brain_radius}{If \code{rot_units} measures an angle (i.e. if it's
+\code{"deg"} or \code{"rad"}), the rotational RPs are transformed to a
+measurement representing the displacement on a sphere of radius
+\code{brain_radius} \code{trans_units}. So this argument should give the
+radius of the brain, in the units of \code{trans_units}.
 
 If \code{brain_radius} is \code{NULL} (default), it will be set to
-50 mm.}
+50 mm (regardless of \code{trans_units}).
+
+If \code{rot_units} does not measure an angle, this argument is completely
+ignored.}
 
 \item{detrend}{Detrend each RP with the DCT before computing FD?
 Default: \code{FALSE}. Can be a number of DCT bases to use, or \code{TRUE}
@@ -47,7 +52,7 @@ position. Default: \code{1} (the previous timepoint). Changing this
 argument sets \eqn{\Delta x_i = x_{i-lag} - x_i} (and similarly for the
 other RPs).}
 
-\item{cutoff}{FD values higher than this will be flagged. Default: \code{.3}.}
+\item{cutoff}{FD values higher than this will be flagged. Default: \code{.4}.}
 }
 \value{
 A list with components

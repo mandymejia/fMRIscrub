@@ -24,12 +24,17 @@
 #'  for centimeters, or \code{"in"} for inches.
 #' @param rot_units \code{"deg"} for degrees (default), \code{"rad"} for radians,
 #'  or one of the \code{trans_units} options.
-#' @param brain_radius If \code{rot_units} measures an angle, the rotational RPs
-#'  are transformed to a spatial measurement representing the displacement on a 
-#'  sphere of radius \code{brain_radius} \code{trans_units}.
+#' @param brain_radius If \code{rot_units} measures an angle (i.e. if it's
+#'  \code{"deg"} or \code{"rad"}), the rotational RPs are transformed to a 
+#'  measurement representing the displacement on a sphere of radius 
+#'  \code{brain_radius} \code{trans_units}. So this argument should give the
+#'  radius of the brain, in the units of \code{trans_units}.
 #' 
 #'  If \code{brain_radius} is \code{NULL} (default), it will be set to 
-#'  50 mm.
+#'  50 mm (regardless of \code{trans_units}).
+#' 
+#'  If \code{rot_units} does not measure an angle, this argument is completely
+#'  ignored.
 #' @param detrend Detrend each RP with the DCT before computing FD?
 #'  Default: \code{FALSE}. Can be a number of DCT bases to use, or \code{TRUE}
 #'  to use 4.
@@ -37,7 +42,7 @@
 #'  position. Default: \code{1} (the previous timepoint). Changing this
 #'  argument sets \eqn{\Delta x_i = x_{i-lag} - x_i} (and similarly for the 
 #'  other RPs).
-#' @param cutoff FD values higher than this will be flagged. Default: \code{.3}.
+#' @param cutoff FD values higher than this will be flagged. Default: \code{.4}.
 #' @return A list with components
 #' \describe{
 #'  \item{measure}{A length \eqn{N} vector of FD values in \code{trans_units}.}
@@ -56,8 +61,9 @@
 #' }
 #' 
 FD <- function(
-  X, trans_units = c("mm", "cm", "in"), rot_units = c("deg", "rad", "mm", "cm", "in"), 
-  brain_radius=NULL, detrend=FALSE, lag=1, cutoff=.3) {
+  X, trans_units = c("mm", "cm", "in"), 
+  rot_units = c("deg", "rad", "mm", "cm", "in"), 
+  brain_radius=NULL, detrend=FALSE, lag=1, cutoff=.4) {
 
   if (is.character(X)) { X <- read.table(X) }
   X <- as.matrix(X); stopifnot(is.matrix(X))
@@ -72,15 +78,18 @@ FD <- function(
   }
 
   # Convert RPs and brain radius to mm.
+  # Note that brain radius will only actually be used if `rot_units` measures an
+  #   angle.
   trans_units <- match.arg(trans_units, trans_units)
   X[,1:3] <- X[,1:3] * switch(trans_units, mm=1, cm=10, `in`=25.4)
 
   if (!is.null(brain_radius)) {
-    brain_radius <- brain_radius * switch(rot_units, mm=1, cm=10, `in`=25.4)
+    brain_radius <- brain_radius * switch(trans_units, mm=1, cm=10, `in`=25.4)
   } else {
     brain_radius <- 50
   }
 
+  # Convert `rot_units` to mm.
   rot_units <- match.arg(rot_units, rot_units)
   X[,4:6] <- X[,4:6] * switch(rot_units, 
     rad=brain_radius, deg=brain_radius*2*pi/360, 
