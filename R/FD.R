@@ -2,7 +2,7 @@
 #'
 #' Calculate Framewise Displacement (FD) 
 #' 
-#' The FD formula is taken from Power et. al. (2012):
+#' The FD formula is taken from Power et al. (2012):
 #'
 #'  \deqn{FD_i = | \Delta x_i | + | \Delta y_i | + | \Delta z_i | + | \Delta \alpha_i | + | \Delta \beta_i | + | \Delta \gamma_i |} 
 #'  
@@ -35,6 +35,22 @@
 #' @param detrend Detrend each RP with the DCT before computing FD?
 #'  Default: \code{FALSE}. Can be a number of DCT bases to use, or \code{TRUE}
 #'  to use 4.
+#' @param TR_for_resp_filt Filter out the respiratory frequency? If so, provide
+#'  the temporal resolution (TR) in seconds, which is needed to calculate the
+#'  filter. Default: \code{NULL} (do not apply a filter).
+#' 
+#'  Power et al. (2019) and Fair et al. (2020) have shown that in multiband 
+#'  data, the RPs may contain head movements which accompany normal respiration,
+#'  as well as artifactual variance in the phase encode direction at the 
+#'  respiratory frequency. They propose applying a notch filter to the RPs to 
+#'  remove variance within the frequency range of respiration; in particular, 
+#'  Fair et al. (2020) used a second-order IIR filter between 0.31 and 0.43 Hz. 
+#'  Here, we use a 0.31-0.43 Hz Chebyshev Type II stop-gap filter, with 20 dB 
+#'  stopband ripple, from the \code{gsignal} package.
+#' 
+#'  The filter will be applied after any detrending. If filtering, consider 
+#'  adjusting \code{cutoff} because the baseline FD value will be lowered. Pham 
+#'  (2023) used 0.2 mm.
 #' @param lag The difference of indices between which to calculate change in
 #'  position. Default: \code{1} (the previous timepoint). Changing this
 #'  argument sets \eqn{\Delta x_i = x_{i-lag} - x_i} (and similarly for the 
@@ -49,18 +65,23 @@
 #' }
 #'
 #' @importFrom utils read.table
-#' @importFrom fMRItools nuisance_regression dct_bases
+#' @importFrom fMRItools nuisance_regression dct_bases is_1
 #' @export
 #' 
 #' @section References:
 #'  \itemize{
-#'    \item{Power, J. D., Barnes, K. A., Snyder, A. Z., Schlaggar, B. L. & Petersen, S. E. Spurious but systematic correlations in functional connectivity MRI networks arise from subject motion. Neuroimage 59, 2142-2154 (2012).}
+#'    \item{Power, J. D., Barnes, K. A., Snyder, A. Z., Schlaggar, B. L., & Petersen, S. E. (2012). Spurious but systematic correlations in functional connectivity MRI networks arise from subject motion. Neuroimage, 59(3), 2142-2154.}
+#'    \item{Power, J. D., Lynch, C. J., Silver, B. M., Dubin, M. J., Martin, A., & Jones, R. M. (2019). Distinctions among real and apparent respiratory motions in human fMRI data. NeuroImage, 201, 116041.}
+#'    \item{Fair, D. A., Miranda-Dominguez, O., Snyder, A. Z., Perrone, A., Earl, E. A., Van, A. N., ... & Dosenbach, N. U. (2020). Correction of respiratory artifacts in MRI head motion estimates. Neuroimage, 208, 116400.}
+#'    \item{Pham, D. D., McDonald, D. J., Ding, L., Nebel, M. B., & Mejia, A. F. (2023). Less is more: balancing noise reduction and data retention in fMRI with data-driven scrubbing. NeuroImage, 270, 119972.}
 #' }
 #' 
 FD <- function(
   X, trans_units = c("mm", "cm", "in"), 
   rot_units = c("deg", "rad", "mm", "cm", "in"), 
-  brain_radius=NULL, detrend=FALSE, lag=1, cutoff=.4) {
+  brain_radius=NULL, 
+  detrend=FALSE, TR_for_resp_filt=NULL,
+  lag=1, cutoff=.4) {
 
   if (is.character(X)) { X <- read.table(X) }
   X <- as.matrix(X); stopifnot(is.matrix(X))
@@ -97,6 +118,26 @@ FD <- function(
   if (!isFALSE(detrend)) { 
     if (isTRUE(detrend)) { detrend <- 4 }
     X <- nuisance_regression(X, cbind(1, dct_bases(nrow(X), detrend)))
+  }
+
+  # Filter if requested.
+  if (!is.null(TR_for_resp_filt)) {
+    if (!requireNamespace("gsignal", quietly = TRUE)) {
+      stop("Package \"gsignal\" needed for filtering. Please install it.", call. = FALSE)
+    }
+
+    stopifnot(fMRItools::is_1(TR_for_resp_filt, "numeric"))
+    stopifnot(TR_for_resp_filt > 0)
+
+    # Data sampled at 1/x Hz (TR = x s) has a Nyquist frequency of 1/x/2 Hz. 
+    # cheby2: "w must be between 0 and 1, where 1 is the Nyquist frequency"
+    # so w in [0, 1] maps to [0 Hz, 1/x/2 Hz].
+    # Fair (2020) used a filter of [0.31 Hz and 0.43 Hz]. 
+    # so w = [0.31 Hz, 0.43 Hz] /(1/x/2 Hz).
+    #    w = [0.31, 0.43] * x * 2.
+    filt_w <- c(0.31, 0.43) * TR_for_resp_filt * 2
+
+    X <- gsignal::filtfilt(gsignal::cheby2(2, Rs=20, w=filt_w, type="stop"), X)
   }
 
   # Compute FD.

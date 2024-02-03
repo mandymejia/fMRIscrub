@@ -10,6 +10,7 @@ FD(
   rot_units = c("deg", "rad", "mm", "cm", "in"),
   brain_radius = NULL,
   detrend = FALSE,
+  TR_for_resp_filt = NULL,
   lag = 1,
   cutoff = 0.4
 )
@@ -44,6 +45,23 @@ If \code{rot_units} does not measure an angle, this argument is ignored.}
 Default: \code{FALSE}. Can be a number of DCT bases to use, or \code{TRUE}
 to use 4.}
 
+\item{TR_for_resp_filt}{Filter out the respiratory frequency? If so, provide
+the temporal resolution (TR) in seconds, which is needed to calculate the
+filter. Default: \code{NULL} (do not apply a filter).
+
+Power et al. (2019) and Fair et al. (2020) have shown that in multiband
+data, the RPs may contain head movements which accompany normal respiration,
+as well as artifactual variance in the phase encode direction at the
+respiratory frequency. They propose applying a notch filter to the RPs to
+remove variance within the frequency range of respiration; in particular,
+Fair et al. (2020) used a second-order IIR filter between 0.31 and 0.43 Hz.
+Here, we use a 0.31-0.43 Hz Chebyshev Type II stop-gap filter, with 20 dB
+stopband ripple, from the \code{gsignal} package.
+
+The filter will be applied after any detrending. If filtering, consider
+adjusting \code{cutoff} because the baseline FD value will be lowered. Pham
+(2023) used 0.2 mm.}
+
 \item{lag}{The difference of indices between which to calculate change in
 position. Default: \code{1} (the previous timepoint). Changing this
 argument sets \eqn{\Delta x_i = x_{i-lag} - x_i} (and similarly for the
@@ -64,7 +82,7 @@ A list with components
 Calculate Framewise Displacement (FD)
 }
 \details{
-The FD formula is taken from Power et. al. (2012):
+The FD formula is taken from Power et al. (2012):
 
 \deqn{FD_i = | \Delta x_i | + | \Delta y_i | + | \Delta z_i | + | \Delta \alpha_i | + | \Delta \beta_i | + | \Delta \gamma_i |}
 
@@ -76,7 +94,10 @@ and \eqn{\Delta x_i = x_{i-1} - x_i} (and similarly for the other RPs).
 \section{References}{
 
 \itemize{
-\item{Power, J. D., Barnes, K. A., Snyder, A. Z., Schlaggar, B. L. & Petersen, S. E. Spurious but systematic correlations in functional connectivity MRI networks arise from subject motion. Neuroimage 59, 2142-2154 (2012).}
+\item{Power, J. D., Barnes, K. A., Snyder, A. Z., Schlaggar, B. L., & Petersen, S. E. (2012). Spurious but systematic correlations in functional connectivity MRI networks arise from subject motion. Neuroimage, 59(3), 2142-2154.}
+\item{Power, J. D., Lynch, C. J., Silver, B. M., Dubin, M. J., Martin, A., & Jones, R. M. (2019). Distinctions among real and apparent respiratory motions in human fMRI data. NeuroImage, 201, 116041.}
+\item{Fair, D. A., Miranda-Dominguez, O., Snyder, A. Z., Perrone, A., Earl, E. A., Van, A. N., ... & Dosenbach, N. U. (2020). Correction of respiratory artifacts in MRI head motion estimates. Neuroimage, 208, 116400.}
+\item{Pham, D. D., McDonald, D. J., Ding, L., Nebel, M. B., & Mejia, A. F. (2023). Less is more: balancing noise reduction and data retention in fMRI with data-driven scrubbing. NeuroImage, 270, 119972.}
 }
 }
 
