@@ -2,8 +2,33 @@
 % Please edit documentation in R/fMRIscrub-package.R
 \docType{package}
 \name{fMRIscrub}
+\alias{fMRIscrub-package}
 \alias{fMRIscrub}
 \title{fMRIscrub: fMRI scrubbing and other data cleaning routines}
 \description{
 See \code{help(package="fMRIscrub")} for a list of functions.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/mandymejia/fMRIscrub}
+  \item Report bugs at \url{https://github.com/mandymejia/fMRIscrub/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Amanda Mejia \email{mandy.mejia@gmail.com}
+
+Authors:
+\itemize{
+  \item John Muschelli \email{muschellij2@gmail.com} (\href{https://orcid.org/0000-0001-6469-1750}{ORCID})
+  \item Damon Pham \email{damondpham@gmail.com} (\href{https://orcid.org/0000-0001-7563-4727}{ORCID})
+}
+
+Other contributors:
+\itemize{
+  \item Daniel McDonald \email{daniel@stat.ubc.ca} [contributor]
+  \item Fatma Parlak \email{fparlak@iu.edu} [contributor]
+}
+
 }
