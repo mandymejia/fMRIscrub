@@ -292,3 +292,125 @@ robdist = function(
     B_quant=B_quant
   )
 }
+
+
+# excluding bootstrap including SHASH
+robshash = function(
+    X,
+    RD_cutoff = 4,
+    RD_quantile = 0.99,
+    trans = c("none", "robust-YJ", "SHASH"),
+    # bootstrap_n = 1000,
+    # bootstrap_alpha = 0.01,
+    projection=c(
+      "ICA",
+      #"fusedPCA",
+      "PCA"
+    ),
+    nuisance="DCT4",
+    center=TRUE, scale=TRUE, comps_mean_dt=FALSE, comps_var_dt=FALSE,
+    PESEL=TRUE, kurt_quantile=.99,
+    #fusedPCA_kwargs=NULL,
+    get_dirs=FALSE, full_PCA=FALSE,
+    get_outliers=TRUE, cutoff=4, seed=0,
+    skip_dimred=FALSE,
+    verbose=FALSE){
+
+  stopifnot(is_1(skip_dimred, "logical"))
+
+  # Run `pscrub`.
+  if (!skip_dimred) {
+    projection <- match.arg(projection, c(
+      "ICA",
+      #"fusedPCA",
+      "PCA"
+    ))
+    data_ps <- pscrub(
+      X=X, projection=projection,
+      nuisance=nuisance,
+      center=center, scale=scale, comps_mean_dt=comps_mean_dt, comps_var_dt=comps_var_dt,
+      kurt_quantile=kurt_quantile,
+      #fusedPCA_kwargs=fusedPCA_kwargs,
+      get_dirs=get_dirs, full_PCA=full_PCA,
+      get_outliers=get_outliers, cutoff=cutoff, seed=seed,
+      verbose=verbose
+    )
+
+    # Get projection.
+    p_dname <- switch(projection, PCA="U", ICA="M")
+    data_ps <- if (kurt_quantile > 0) {
+      data_ps[[projection]][[p_dname]][,data_ps[[projection]]$highkurt]
+    } else {
+      data_ps[[projection]][[p_dname]]
+    }
+
+    if (ncol(data_ps)==0) { message("No high-kurtosis comps."); return(rep(FALSE, nrow(X))) }
+
+  } else {
+    data_ps <- X
+  }
+
+  # Compute robust distances.
+  ind_incld <- c(cov.mcd(data_ps)$best)
+  rd <- RD_meas(data_ps, ind_incld)
+
+  # Identify univariate outliers.
+  univOut <- RD_univOut(data_ps, cutoff = RD_cutoff, trans=trans)
+
+  # Impute.
+  impData <- RD_impData(data_ps, univOut)
+
+  # cutoff obtained from RD of imputed data
+  ind_incld_imp <- c(cov.mcd(impData)$best)
+  rd_imp <- RD_meas(impData, ind_incld_imp)$RD
+  empirical = quantile(rd_imp, probs =0.99)
+
+  # # Define dims.
+  # nT = dim(impData)[1]
+  # nQ = dim(impData)[2]
+  # nH = length(ind_incld)
+
+  # # Do the bootstrap.
+  # if (bootstrap_n == 0) { stop("Not implemented yet.") }
+  # ind_excld <- setdiff(seq(nT), ind_incld)
+  # # Fix the covariance since it is biased (low determinant) in the bootstrap.
+  # invcov_sqrt <- rd$invcov_sqrt
+  # RD_boot <- matrix(NA,nT,bootstrap_n)
+  # for (bb in seq(bootstrap_n)) {
+  #   data_bb <- NA*impData
+  #   if (verbose) { print(bb) }
+  #   ind_incld_bb <- sample(ind_incld, nH, replace = TRUE)
+  #   ind_excld_bb <- sample(ind_excld, (nT-nH), replace = TRUE)
+  #
+  #   data_bb[ind_incld,] <- impData[ind_incld_bb,]
+  #   data_bb[ind_excld,] <- impData[ind_excld_bb,]
+  #
+  #   # MCD estimates of mean for bootstrap procedure
+  #   xbar_star <- RD_meas(data_bb, ind_incld_bb, dist = FALSE)$xbar_star
+  #   xbar_star_mat <- matrix(xbar_star, nrow = nT, ncol = nQ, byrow = TRUE)
+  #   temp <- (data_bb - xbar_star_mat) %*% invcov_sqrt
+  #   RD_boot[,bb] <- rowSums(temp * temp)
+  # }
+
+  # B_quant <- apply(RD_boot, 2, quantile, probs = 1-bootstrap_alpha)
+  # # 50% CI - 0.75 coverage
+  # lwr_50 <- quantile(as.vector(B_quant))[2]
+  # # 80% CI - 0.9 coverage
+  # lwr_80 <- quantile(B_quant, c(0.1, 0.9))[1]
+  #
+  # # 95% CI - 0.975 coverage
+  # lwr_95 <- quantile(B_quant, c(0.025, 0.975))[1]
+
+  # Return results.
+  list(
+    data = data_ps, # the dimension reduced and high kurtosis selected data
+    impData = impData, # imputed data
+    dims = c(nT,nQ), # dimension of dimension reduced and high kurtosis selected data
+    RD = rd, # RD of data_ps
+    ind_incld = ind_incld,
+    empirical = empirical #,
+    # lwr_50=lwr_50, lwr_80=lwr_80, lwr_95=lwr_95,
+    # lwr_quant = quantile(B_quant, RD_quantile/2),
+    # B_quant=B_quant
+  )
+}
