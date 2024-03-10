@@ -295,7 +295,7 @@ robdist = function(
 
 
 # excluding bootstrap including SHASH
-robshash = function(
+rob_RD = function(
     X,
     RD_cutoff = 4,
     RD_quantile = 0.99,
