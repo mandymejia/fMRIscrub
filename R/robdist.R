@@ -70,7 +70,11 @@ RD_univOut <- function(
   } else if (trans=="robust-YJ") {
     for (ii in seq(Q)) {
       temp <- data[,ii]
-      trans_temp <- (cellWise::transfo(temp, type = "YJ",robust = TRUE, prestandardize = TRUE))$Xt
+      # trans_temp <- (cellWise::transfo(temp, type = "YJ",robust = TRUE, prestandardize = TRUE))$Xt
+      # FP commented out the previous line as cellWise was updated and Xt no longer reperesent the
+      # transformed matrix. The following code must be right.
+      trans_temp <- (cellWise::transfo(temp, type = "YJ",robust = TRUE, prestandardize = TRUE))$Y
+
       medi <- median(trans_temp)
       MAD <- median(abs(trans_temp - medi))
       STD <- 1.4826 * MAD
