@@ -5,6 +5,8 @@
 
 <!-- badges: start -->
 
+[![CRAN
+status](https://www.r-pkg.org/badges/version/fMRIscrub)](https://cran.r-project.org/package=fMRIscrub)
 [![R-CMD-check](https://github.com/mandymejia/fMRIscrub/workflows/R-CMD-check/badge.svg)](https://github.com/mandymejia/fMRIscrub/actions)
 [![Codecov test
 coverage](https://codecov.io/gh/mandymejia/fMRIscrub/branch/master/graph/badge.svg)](https://app.codecov.io/gh/mandymejia/fMRIscrub?branch=master)
@@ -18,12 +20,10 @@ outlier detection tasks involving high-dimensional data.
 
 ## Installation
 
-You can install the development version of fMRIscrub from
-[GitHub](https://github.com/) with:
+You can install the development version of fMRIscrub from CRAN with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("mandymejia/fMRIscrub")
+install.packages("fMRIscrub")
 ```
 
 ## Quick start guide
@@ -60,5 +60,7 @@ to view the tutorial vignette.
 
 ## Citation
 
-If using projection scrubbing, you can cite our pre-print at
-<https://arxiv.org/abs/2108.00319>.
+If using projection scrubbing, you can cite our 2023 paper [“Less is
+more: balancing noise reduction and data retention in fMRI with
+data-driven
+scrubbing”](https://doi.org/10.1016/j.neuroimage.2023.119972).
