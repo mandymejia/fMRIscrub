@@ -70,7 +70,7 @@ RD_univOut <- function(
   } else if (trans=="robust-YJ") {
     for (ii in seq(Q)) {
       temp <- data[,ii]
-      trans_temp <- (cellWise::transfo(temp, type = "YJ",robust = TRUE, prestandardize = TRUE))$Xt
+      trans_temp <- (cellWise::transfo(temp, type = "YJ",robust = TRUE, standardize = TRUE))$Xt
       medi <- median(trans_temp)
       MAD <- median(abs(trans_temp - medi))
       STD <- 1.4826 * MAD
