@@ -12,3 +12,4 @@
 ^R/fusedPCA\.R$
 ^R/kurtosis_rob\.R$
 ^vignettes/data/HCP
+^vignettes/new_vignette

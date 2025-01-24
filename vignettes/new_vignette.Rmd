@@ -1,0 +1,85 @@
+---
+title: "`fMRIscrub` Demo"
+author: "Isaiah Farrell, Damon Pham, & Amanda Mejia"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{`fMRIscrub` Demo}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(autodep = TRUE, cache = FALSE)
+```
+
+This is the new `fMRIscrub` vignette.
+
+Let's load packages and list the file names:
+
+```{r}
+library(RNifti)
+library(fMRItools)
+library(ciftiTools)
+ciftiTools.setOption("wb_path", "~/Applications/workbench")
+
+rp_fname <- file.path("data", "HCP_Movement_Regressors.txt")
+cii_fname <- file.path("data", "HCP_rfMRI_REST2_RL_Atlas.dtseries.nii")
+nii_fname <- file.path("data", "HCP_rfMRI_REST2_RL.nii.gz")
+```
+
+Cortex plots from `ciftiTools` are made possible by the `rgl` package. To prepare the R Markdown document for knitting we need to do the following: 
+
+```{r}
+library(rgl)
+rgl::setupKnitr()
+
+# Sometimes the first OpenGL window does not render properly.
+rgl::open3d(); rgl::close3d()
+
+# These are also required.
+library(manipulateWidget)
+library(ggpubr)
+```
+
+# CIFTI data
+
+Read:
+
+```{r}
+cii <- read_cifti(cii_fname)
+```
+
+Plot:
+
+```{r fig.cap="CIFTI cortex data", rgl=TRUE, format="jpg", fig.height=3.5, fig.width=4.5}
+view_xifti_surface(cii, title="First volume")
+```
+
+```{r eval=FALSE}
+view_xifti_volume(cii, title="First volume") # skipped
+```
+
+# NIFTI data
+
+Read:
+
+```{r}
+nii <- RNifti::readNifti(nii_fname)
+```
+
+Plot:
+
+```{r fig.height=5, fig.width=5}
+RNifti::view(nii[,,,1,drop=FALSE], interactive=FALSE)
+```
+
+# RPs
+
+Read:
+
+```{r}
+rp <- as.matrix(read.table(rp_fname)[,seq(6)])
+dim(rp)
+```
