@@ -11,3 +11,4 @@
 ^CRAN-SUBMISSION$
 ^R/fusedPCA\.R$
 ^R/kurtosis_rob\.R$
+^vignette_data/HCP
