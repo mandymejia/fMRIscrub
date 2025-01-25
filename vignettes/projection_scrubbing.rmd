@@ -75,7 +75,7 @@ DVARS, another data-driven scrubbing technique [(Afyouni and Nichols, 2018)](htt
 
 ```{r fig.width=8, fig.height=3}
 p1 <- plot(DVARS(Dat1), title="Dat1", show.legend=FALSE)
-# same as: plot(scrub(Dat1, "DVARS"), title="Dat1", show.legend=FALSE)
+# same as: plot(IDvols(Dat1, "DVARS"), title="Dat1", show.legend=FALSE)
 p2 <- plot(DVARS(Dat2), title="Dat2", show.legend=FALSE)
 cowplot::plot_grid(p1, p2, nrow=1)
 ```

@@ -19,7 +19,7 @@
 #' 
 #' @export
 #' 
-scrub <- function(X, method=c("projection", "DVARS"), ...) {
+IDvols <- function(X, method=c("projection", "DVARS"), ...) {
   method <- match.arg(method, c("projection", "DVARS"))
   FUN <- switch(method, projection=pscrub, DVARS=DVARS)
   FUN(X, ...)
@@ -51,7 +51,7 @@ scrub <- function(X, method=c("projection", "DVARS"), ...) {
 #' 
 #' @export 
 #' 
-scrub_xifti <- function(X, method=c("projection", "DVARS"), brainstructures=c("left", "right"), ...) {
+IDvols_xifti <- function(X, method=c("projection", "DVARS"), brainstructures=c("left", "right"), ...) {
   method <- match.arg(method, c("projection", "DVARS"))
   FUN <- switch(method, projection=pscrub, DVARS=DVARS)
 

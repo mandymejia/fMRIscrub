@@ -34,7 +34,7 @@ install.packages("fMRIscrub")
 ## Quick start guide
 
 ``` r
-s_Dat1 <- scrub(Dat1)
+s_Dat1 <- IDvols(Dat1)
 plot(s_Dat1)
 Dat1_cleaned <- Dat1[!s_Dat1$outlier_flag,]
 ```
