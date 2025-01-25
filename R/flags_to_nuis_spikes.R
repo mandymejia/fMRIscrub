@@ -14,7 +14,7 @@
 #'  \code{n_time} and the number of columns will be the number of flags. Each 
 #'  column will have a \code{1} at the flag index, and \code{0} elsewhere.
 #' @export
-flags_to_nuis_spikes <- function(flags, n_time){
+flags2spikes <- function(flags, n_time){
   stopifnot(is_posNum(n_time) && n_time==round(n_time))
   if (is.logical(flags)) { flags <- which(flags) }
   stopifnot(is.numeric(flags))
