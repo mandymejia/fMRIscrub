@@ -24,7 +24,7 @@
 #' @importFrom utils stack
 #'
 #' @keywords internal
-scrub_plot <- function(
+IDvols_plot <- function(
   meas, cut=NULL, flag_intersect=FALSE, 
   colors=NULL, log_y=FALSE, geom="point", 
   ylim_min=0, ylim_max= max(meas$measure),
@@ -262,11 +262,11 @@ scrub_plot <- function(
 
 #' Plot scrubbing results
 #' 
-#' Plot a leverage, DVARS, or FD timeseries from a \code{"scrub_projection"},
-#'  \code{"scrub_DVARS"}, or \code{"scrub_FD"} object, respectively. Highlight 
+#' Plot a leverage, DVARS, or FD timeseries from a \code{"IDvols_projection"},
+#'  \code{"IDvols_DVARS"}, or \code{"IDvols_FD"} object, respectively. Highlight 
 #'  volumes flagged for outlier presence.
 #'
-#' @param x The \code{"scrub_*"} object.
+#' @param x The \code{"IDvols_*"} object.
 #' @param title (Optional) If provided, will add a title to the plot.
 #' @param ... Additional arguments to ggplot, e.g. \code{main}, \code{sub}, 
 #'  \code{xlab}, \code{ylab}, \code{legend.position}
@@ -274,7 +274,7 @@ scrub_plot <- function(
 #' @return A ggplot
 #'
 #' @keywords internal
-plot_scrub_wrapper <- function(x, title=NULL, ...){
+plot_IDvols_wrapper <- function(x, title=NULL, ...){
   gg_args <- list(...)
   mtype <- as.character(x$measure_info["type"])
   stopifnot(mtype %in% c("Leverage", "DVARS", "FD"))
@@ -305,12 +305,12 @@ plot_scrub_wrapper <- function(x, title=NULL, ...){
 
   # Make the plot
   if ("legend.position" %in% names(gg_args)) {
-    plt <- scrub_plot(
+    plt <- IDvols_plot(
       meas, cut, flag_intersect=(mtype=="DVARS"), 
       ylab=mtype, ylim_min=ylim_min, ylim_max=ylim_max, ...
     )
   } else {
-    plt <- scrub_plot(
+    plt <- IDvols_plot(
       meas, cut, legend.position="none", flag_intersect=(mtype=="DVARS"), 
       ylab=mtype, ylim_min=ylim_min, ylim_max=ylim_max, ...
     )
@@ -331,69 +331,69 @@ plot_scrub_wrapper <- function(x, title=NULL, ...){
   return(plt)
 }
 
-#' Plot a \code{"scrub_projection"} object
+#' Plot a \code{"IDvols_projection"} object
 #' 
-#' @param x The \code{"scrub_projection"} object
+#' @param x The \code{"IDvols_projection"} object
 #' @param title (Optional) If provided, will add a title to the plot.
 #' @param ... Additional arguments to ggplot, e.g. \code{main}, \code{sub}, 
 #'  \code{xlab}, \code{ylab}, \code{legend.position}
 #' 
 #' @return A ggplot
 #' 
-#' @method plot scrub_projection
+#' @method plot IDvols_projection
 #' @export
-plot.scrub_projection <- function(x, title=NULL, ...) {
-  plot_scrub_wrapper(x, title=title, ...)
+plot.IDvols_projection <- function(x, title=NULL, ...) {
+  plot_IDvols_wrapper(x, title=title, ...)
 }
 
-#' Plot a \code{"scrub_DVARS"} object
+#' Plot a \code{"IDvols_DVARS"} object
 #' 
-#' @param x The \code{"scrub_DVARS"} object
+#' @param x The \code{"IDvols_DVARS"} object
 #' @param title (Optional) If provided, will add a title to the plot.
 #' @param ... Additional arguments to ggplot, e.g. \code{main}, \code{sub}, 
 #'  \code{xlab}, \code{ylab}, \code{legend.position}
 #' 
 #' @return A ggplot
 #' 
-#' @method plot scrub_DVARS
+#' @method plot IDvols_DVARS
 #' @export
-plot.scrub_DVARS <- function(x, title=NULL, ...) {
-  plot_scrub_wrapper(x, title=title, ...)
+plot.IDvols_DVARS <- function(x, title=NULL, ...) {
+  plot_IDvols_wrapper(x, title=title, ...)
 }
 
-#' Plot a \code{"scrub_FD"} object
+#' Plot a \code{"IDvols_FD"} object
 #' 
-#' @param x The \code{"scrub_FD"} object
+#' @param x The \code{"IDvols_FD"} object
 #' @param title (Optional) If provided, will add a title to the plot.
 #' @param ... Additional arguments to ggplot, e.g. \code{main}, \code{sub}, 
 #'  \code{xlab}, \code{ylab}, \code{legend.position}
 #' 
 #' @return A ggplot
 #' 
-#' @method plot scrub_FD
+#' @method plot IDvols_FD
 #' @export
-plot.scrub_FD <- function(x, title=NULL, ...) {
-  plot_scrub_wrapper(x, title=title, ...)
+plot.IDvols_FD <- function(x, title=NULL, ...) {
+  plot_IDvols_wrapper(x, title=title, ...)
 }
 
-#' Plot a \code{"scrub_projection_multi"} object
+#' Plot a \code{"IDvols_projection_multi"} object
 #'
-#' @param x The \code{"scrub_projection_multi"} object.
+#' @param x The \code{"IDvols_projection_multi"} object.
 #' @param title (Optional) If provided, will add a title to the plot.
 #' @param ... Additional arguments to ggplot, e.g. \code{main}, \code{sub}, 
 #'  \code{xlab}, \code{ylab}, \code{legend.position}
 #'
 #' @return A ggplot
 #'
-# @method plot scrub_projection_multi
+# @method plot IDvols_projection_multi
 #' @keywords internal
-plot.scrub_projection_multi <- function(x, title=NULL, ...){
+plot.IDvols_projection_multi <- function(x, title=NULL, ...){
   gg_args <- list(...)
   
   if ("legend.position" %in% names(gg_args)) {
-    plt <- scrub_plot(x$measure, x$outlier_cutoff, ...)
+    plt <- IDvols_plot(x$measure, x$outlier_cutoff, ...)
   } else {
-    plt <- scrub_plot(x$measure, x$outlier_cutoff, legend.position="none", ...)
+    plt <- IDvols_plot(x$measure, x$outlier_cutoff, legend.position="none", ...)
   }
 
   # Add title.

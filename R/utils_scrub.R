@@ -1,89 +1,89 @@
-#' Summarize a \code{"scrub_projection"} object
+#' Summarize a \code{"IDvols_projection"} object
 #'
-#' Summary method for class \code{"scrub_projection"}
+#' Summary method for class \code{"IDvols_projection"}
 #'
-#' @param object Object of class \code{"scrub_projection"}. 
+#' @param object Object of class \code{"IDvols_projection"}. 
 #' @param ... further arguments passed to or from other methods.
 #' @return A plot of the scrubbing results
 #' @export
-#' @method summary scrub_projection
-summary.scrub_projection <- function(object, ...) {
+#' @method summary IDvols_projection
+summary.IDvols_projection <- function(object, ...) {
   plot(object, ...)
 }
 
-#' @rdname summary.scrub_projection
+#' @rdname summary.IDvols_projection
 #' @export
 #' 
-#' @param x Object of class \code{"scrub_projection"}. 
-#' @method print summary.scrub_projection
-print.summary.scrub_projection <- function(x, ...) {
-  print(summary.scrub_projection(x))
+#' @param x Object of class \code{"IDvols_projection"}. 
+#' @method print summary.IDvols_projection
+print.summary.IDvols_projection <- function(x, ...) {
+  print(summary.IDvols_projection(x))
 }
 
-#' @rdname summary.scrub_projection
+#' @rdname summary.IDvols_projection
 #' @export
 #' 
-#' @method print scrub_projection
-print.scrub_projection <- function(x, ...) {
-  print.summary.scrub_projection(summary(x, ...))
+#' @method print IDvols_projection
+print.IDvols_projection <- function(x, ...) {
+  print.summary.IDvols_projection(summary(x, ...))
 }
 
-#' Summarize a \code{"scrub_DVARS"} object
+#' Summarize a \code{"IDvols_DVARS"} object
 #'
-#' Summary method for class \code{"scrub_DVARS"}
+#' Summary method for class \code{"IDvols_DVARS"}
 #'
-#' @param object Object of class \code{"scrub_DVARS"}. 
+#' @param object Object of class \code{"IDvols_DVARS"}. 
 #' @param ... further arguments passed to or from other methods.
 #' @export
 #' @return A plot of the scrubbing results
-#' @method summary scrub_DVARS
-summary.scrub_DVARS <- function(object, ...) {
+#' @method summary IDvols_DVARS
+summary.IDvols_DVARS <- function(object, ...) {
   plot(object, ...)
 }
 
-#' @rdname summary.scrub_DVARS
+#' @rdname summary.IDvols_DVARS
 #' @export
 #' 
-#' @param x Object of class \code{"scrub_DVARS"}. 
-#' @method print summary.scrub_DVARS
-print.summary.scrub_DVARS <- function(x, ...) {
-  print(summary.scrub_DVARS(x))
+#' @param x Object of class \code{"IDvols_DVARS"}. 
+#' @method print summary.IDvols_DVARS
+print.summary.IDvols_DVARS <- function(x, ...) {
+  print(summary.IDvols_DVARS(x))
 }
 
-#' @rdname summary.scrub_DVARS
+#' @rdname summary.IDvols_DVARS
 #' @export
 #' 
-#' @method print scrub_DVARS
-print.scrub_DVARS <- function(x, ...) {
-  print.summary.scrub_DVARS(summary(x, ...))
+#' @method print IDvols_DVARS
+print.IDvols_DVARS <- function(x, ...) {
+  print.summary.IDvols_DVARS(summary(x, ...))
 }
 
-#' Summarize a \code{"scrub_FD"} object
+#' Summarize a \code{"IDvols_FD"} object
 #'
-#' Summary method for class \code{"scrub_FD"}
+#' Summary method for class \code{"IDvols_FD"}
 #'
-#' @param object Object of class \code{"scrub_FD"}. 
+#' @param object Object of class \code{"IDvols_FD"}. 
 #' @param ... further arguments passed to or from other methods.
 #' @export
 #' @return A plot of the scrubbing results
-#' @method summary scrub_FD
-summary.scrub_FD <- function(object, ...) {
+#' @method summary IDvols_FD
+summary.IDvols_FD <- function(object, ...) {
   plot(object, ...)
 }
 
-#' @rdname summary.scrub_FD
+#' @rdname summary.IDvols_FD
 #' @export
 #' 
-#' @param x Object of class \code{"scrub_FD"}. 
-#' @method print summary.scrub_FD
-print.summary.scrub_FD <- function(x, ...) {
-  print(summary.scrub_FD(x))
+#' @param x Object of class \code{"IDvols_FD"}. 
+#' @method print summary.IDvols_FD
+print.summary.IDvols_FD <- function(x, ...) {
+  print(summary.IDvols_FD(x))
 }
 
-#' @rdname summary.scrub_FD
+#' @rdname summary.IDvols_FD
 #' @export
 #' 
-#' @method print scrub_FD
-print.scrub_FD <- function(x, ...) {
-  print.summary.scrub_FD(summary(x, ...))
+#' @method print IDvols_FD
+print.IDvols_FD <- function(x, ...) {
+  print.summary.IDvols_FD(summary(x, ...))
 }

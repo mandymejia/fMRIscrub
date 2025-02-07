@@ -169,5 +169,5 @@ ps.Dat1.3 <- fMRIscrub:::pscrub_multi(
     "ICA"
   ), verbose=TRUE, comps_mean_dt=1, comps_var_dt=1
 )
-fMRIscrub:::plot.scrub_projection_multi(ps.Dat1.3, legend.position="bottom")
+fMRIscrub:::plot.IDvols_projection_multi(ps.Dat1.3, legend.position="bottom")
 ```

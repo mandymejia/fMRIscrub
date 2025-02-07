@@ -4,7 +4,7 @@ test_that("pscrub works", {
     projection = c("ICA", "ICA_kurt"),
     ICA_method="R" # "all"
   ))
-  fMRIscrub:::plot.scrub_projection_multi(psx) # expect_warning w/ fusedPCA?
+  fMRIscrub:::plot.IDvols_projection_multi(psx) # expect_warning w/ fusedPCA?
 
   # fusedPCA
   psx <- testthat::expect_warning(fMRIscrub:::pscrub_multi(
@@ -18,7 +18,7 @@ test_that("pscrub works", {
     ICA_method="R",
     verbose = TRUE
   ))
-  fMRIscrub:::plot.scrub_projection_multi(psx, title = "My Plot")
+  fMRIscrub:::plot.IDvols_projection_multi(psx, title = "My Plot")
 
   psx <- testthat::expect_warning(IDvols(Dat1, ICA_method="R"))
   print(psx)

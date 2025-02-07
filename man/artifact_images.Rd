@@ -7,7 +7,7 @@
 artifact_images(psx, idx = NULL, use_dt = TRUE)
 }
 \arguments{
-\item{psx}{A \code{"scrub_projection"} object containing projection scrubbing
+\item{psx}{A \code{"IDvols_projection"} object containing projection scrubbing
 results.}
 
 \item{idx}{The timepoints or column indexes for which to compute artifact

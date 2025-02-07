@@ -8,7 +8,7 @@
 #'  component at the flagged timepoint, and "top" artifact images based on the 
 #'  projection direction with the greatest score at the flagged timepoint.
 #'
-#' @param psx A \code{"scrub_projection"} object containing projection scrubbing
+#' @param psx A \code{"IDvols_projection"} object containing projection scrubbing
 #'  results.
 #' @param idx The timepoints or column indexes for which to compute artifact
 #'  images. If \code{NULL} (default), use the outlying timepoints. 

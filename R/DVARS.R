@@ -135,5 +135,5 @@ DVARS <- function(
     }
   }
 
-  structure(out, class="scrub_DVARS")
+  structure(out, class="IDvols_DVARS")
 }

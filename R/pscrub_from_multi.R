@@ -5,7 +5,7 @@
 #'
 #' @keywords internal
 pscrub_from_multi <- function(psx) {
-  class(psx) <- "scrub_projection"
+  class(psx) <- "IDvols_projection"
   if (ncol(psx$measure) > 1) { 
     warning("The input was not from a `pscrub` call, since there are more than one leverage measures.")
     return(psx)
