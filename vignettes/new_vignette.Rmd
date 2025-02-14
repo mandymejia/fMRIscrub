@@ -19,6 +19,7 @@ This is the new `fMRIscrub` vignette.
 Let's load packages and list the file names:
 
 ```{r}
+library(fMRIscrub)
 library(RNifti)
 library(fMRItools)
 library(ciftiTools)
@@ -49,6 +50,34 @@ Read:
 
 ```{r}
 cii <- read_cifti(cii_fname)
+```
+
+(New Stuff)
+
+```{r}
+dim(cii) # locations by time
+```
+
+```{r}
+vols2rm <- IDvols_xifti(cii, method="DVARS")
+table(vols2rm$outlier_flag$Dual)
+
+spikes <- flags2spikes(vols2rm$outlier_flag$Dual, ncol(cii))
+```
+
+```{r}
+cii_scrubbed <- select_xifti(cii, which(!vols2rm$outlier_flag$Dual))
+dim(cii_scrubbed)
+```
+
+```{r}
+other <- NULL # such as `rp`
+cii_nuis_reg <- nuisance_regression(as.matrix(cii), cbind(1, spikes, other))
+```
+
+```{r}
+vols2rm_v2 <- IDvols(as.matrix(cii), method="DVARS")
+table(vols2rm$outlier_flag$Dual)
 ```
 
 Plot:
@@ -82,4 +111,6 @@ Read:
 ```{r}
 rp <- as.matrix(read.table(rp_fname)[,seq(6)])
 dim(rp)
+vols2rm_according_to_fd <- FD(rp)
+vols2rm_according_to_fd
 ```
