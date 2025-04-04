@@ -42,8 +42,13 @@ SHASH_to_normal <- function(x, mu, sigma, nu, tau, inverse = FALSE){
 #'  distribution.
 #'
 #' @param x The numeric vector in which to detect outliers.
-#' @param maxit The maximum number of iterations. Default: \code{10}.
-#' @param out_lim SD threshold for outlier flagging. Default: \code{4}.
+#' @param thr0 Initial threshold for weighting. Default: \code{2.58}.
+#' @param thr Final threshold for outlier detection. Default: \code{4}.
+#' @param symmetric Single scale for the entire data? Default: \code{TRUE}.
+#' @param use_huber Use the Huber estimates for center and scale? Default: 
+#'  \code{FALSE}.
+#' @param upper_only Only consider upper threshold? Default: \code{FALSE}.
+#' @param maxit The maximum number of iterations. Default: \code{20}.
 #' @param weight_init Initial weights. Default: \code{NULL} (no pre-determined outliers).
 #'
 #' @return A \code{"SHASH_out"} object, i.e. a list with components
@@ -65,55 +70,74 @@ SHASH_to_normal <- function(x, mu, sigma, nu, tau, inverse = FALSE){
 #' x[77] <- 13
 #' SHASH_out(x)
 #'
-SHASH_out <- function(x, maxit = 20, out_lim = 3, weight_init = NULL){
-  nL <- length(x)
-  if(is.null(weight_init)){
-    weight_new <- rep(TRUE, nL) # TRUE if not an outlier
-  } else{
-    weight_new <- as.logical(weight_init) # can initialize the weight of the outliers
+SHASH_out <- function(
+  x, thr0 = 2.58, thr = 4, symmetric = TRUE, use_huber = FALSE, 
+  upper_only = FALSE, maxit = 20, weight_init = NULL) {
+  
+  nL <- length(x)  # Length of univariate data
+  
+  # Initial weight allocation
+  if (is.null(weight_init)) {  # if weight is not initialized by user
+    W <- tryCatch(
+      1 - emprule_rob(x, thr = thr0, symmetric = symmetric, use_huber = use_huber, upper_only = upper_only),  # Use empirical rule for weights
+      error = function(e) rep(TRUE, nL)
+    )
+    
+    weight_new <- as.logical(W)  # Ensure it's a logical vector
+    
+  } else {
+    weight_new <- as.logical(weight_init)  # Initialize from user-provided weights
   }
-  iter <- 0
-  success <- FALSE
+  
+  iter <- 0  # Number of iterations
+  success <- FALSE  # Success flag
+  indx_iters <- matrix(NA, nrow = nL, ncol = maxit)  # Store index iterations
 
-  indx_iters <- matrix(NA, nrow = nL, ncol = maxit)
   repeat {
     iter <- iter + 1
     weight_old <- weight_new
 
-    # Transform the data.
+    # Fit SHASH model using weights
     mod <- gamlss::gamlssML(
-      x~1,
+      x ~ 1,
       family = "SHASHo2",
       maxit = 10000,
-      weight = as.numeric(weight_new)
+      weights = as.numeric(weight_new)
     )
     est <- gamlss::coefAll(mod)
+
+    # Convert data to normal based on SHASH estimates
     x_norm <- SHASH_to_normal(
       x = x,
       mu = est$mu, sigma = est$sigma, nu = est$nu, tau = est$tau,
       inverse = FALSE
     )
 
-    # Detect outliers.
-    # x_norm_med <- median(x_norm)
-    # MAD = (1.4826) * median(abs(x_norm - x_norm_med))
-    weight_new <- (x_norm > -out_lim) & (x_norm < out_lim) # TRUE for non-outliers
+    # Apply empirical rule for new weights
+    weight_new <- as.logical(1 - emprule_rob(x_norm, thr = thr0, symmetric = symmetric, use_huber = use_huber, upper_only = upper_only))
+    
+    # Log outliers on `indx_iters`
+    indx_iters[, iter] <- 1 - weight_new
 
-    # Log outliers on `indx_iters`.
-    indx_iters[, iter] = 1 - weight_new
-
-    # Check convergence.
-    if (all.equal(weight_old, weight_new) == TRUE) {
+    # Check convergence
+    if (isTRUE(all.equal(weight_old, weight_new))) {
       success <- TRUE
       break
-    } else if (iter >=  maxit) {
+    } else if (iter >= maxit) {
       break
     }
   }
+  
+  # **Modify final outlier selection based on `upper_only`**
+  if (upper_only) {
+    final_out_idx <- which(x_norm > thr)  # Only consider upper threshold outliers
+  } else {
+    final_out_idx <- which(abs(x_norm) > thr)  # Symmetric thresholding (original behavior)
+  }
 
-  # Return results.
+  # Return results
   out <- list(
-    out_idx = which(!weight_new),
+    out_idx = final_out_idx,  # Weight final, final threshold weighting based on thr
     x_norm = x_norm,
     SHASH_coef = est[c("mu", "sigma", "nu", "tau")],
     indx_iters = indx_iters,
@@ -121,7 +145,7 @@ SHASH_out <- function(x, maxit = 20, out_lim = 3, weight_init = NULL){
     converged = success
   )
   class(out) <- "SHASH_out"
-  out
+  return(out)
 }
 
 #' Robust empirical rule
@@ -130,16 +154,73 @@ SHASH_out <- function(x, maxit = 20, out_lim = 3, weight_init = NULL){
 #'
 #' @param x The data
 #' @param thr MAD threshold
+#' @param symmetric Single scale for the entire data? Default: \code{TRUE}.
+#' @param use_huber Use the Huber estimates for center and scale? Default: 
+#'  \code{FALSE}.
+#' @param upper_only Only consider upper threshold? Default: \code{FALSE}.
 #'
 #' @return Logical vector indicating whether each element in \code{x} is an
 #'  outlier (\code{TRUE} if an outlier).
+#' @importFrom MASS huber
 #' @keywords internal
-emprule_rob <- function(x, thr=4){
-  x_med <- median(x)
-  # Detect outliers.
-  MAD = (1.4826) * median(abs(x - x_med))
-  lim_left = x_med - thr * MAD
-  lim_right = x_med + thr * MAD
-  out <- (x < lim_left) | (x > lim_right)
+emprule_rob <- function(x, thr = 4, symmetric = TRUE, use_huber = FALSE, upper_only = FALSE) {
+  
+  # Validate inputs
+  if (!is.numeric(x)) stop("Input data 'x' must be numeric.")
+  if (!is.numeric(thr) || length(thr) != 1 || thr <= 0) {
+    stop("Threshold 'thr' must be a positive numeric value.")
+  }
+  
+  # Error handling for upper_only mode
+  if (use_huber && upper_only) {
+    stop("Cannot use `upper_only = TRUE` when `use_huber = TRUE`. Set `use_huber = FALSE`.")
+  }
+  
+  # Error handling for use_huber mode
+  if (use_huber && !symmetric) {
+    stop("Cannot use `use_huber = TRUE` when `symmetric = FALSE`. Set `symmetric = TRUE`.")
+  }
+  
+  # Calculate the center and scale
+  x_med <- median(x, na.rm = TRUE)
+  
+  if (use_huber) {
+    # Use Huber's estimate for location and scale
+    huber_fit <- MASS::huber(x)
+    center <- huber_fit$mu
+    scale <- huber_fit$s
+    
+  } else if (symmetric) {
+    # Use Median Absolute Deviation (MAD) scaled to standard deviation
+    MAD <- mad(x, na.rm = TRUE)
+    center <- x_med
+    scale <- MAD
+    
+  } else {
+    # Asymmetric: Calculate separate left and right scales
+    xl <- x[x < x_med]  # Points to the left of the median
+    xr <- x[x > x_med]  # Points to the right of the median
+    
+    left_mad <- 1.4826 * median(abs(xl - x_med), na.rm = TRUE)
+    right_mad <- 1.4826 * median(abs(xr - x_med), na.rm = TRUE)
+    center <- x_med
+  }
 
+  # Calculate thresholds
+  if (symmetric) {
+    lim_left <- center - thr * scale
+    lim_right <- center + thr * scale
+  } else {
+    lim_left <- center - thr * left_mad
+    lim_right <- center + thr * right_mad
+  }
+
+  # Identify outliers
+  if (upper_only) {
+    out <- x > lim_right  # Only filter upper threshold values
+  } else {
+    out <- (x < lim_left) | (x > lim_right)  # Default: Detect both upper & lower outliers
+  }
+  
+  return(out)
 }

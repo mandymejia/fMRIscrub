@@ -4,14 +4,32 @@
 \alias{SHASH_out}
 \title{Robust outlier detection based on SHASH distribution}
 \usage{
-SHASH_out(x, maxit = 20, out_lim = 3, weight_init = NULL)
+SHASH_out(
+  x,
+  thr0 = 2.58,
+  thr = 4,
+  symmetric = TRUE,
+  use_huber = FALSE,
+  upper_only = FALSE,
+  maxit = 20,
+  weight_init = NULL
+)
 }
 \arguments{
 \item{x}{The numeric vector in which to detect outliers.}
 
-\item{maxit}{The maximum number of iterations. Default: \code{10}.}
+\item{thr0}{Initial threshold for weighting. Default: \code{2.58}.}
 
-\item{out_lim}{SD threshold for outlier flagging. Default: \code{4}.}
+\item{thr}{Final threshold for outlier detection. Default: \code{4}.}
+
+\item{symmetric}{Single scale for the entire data? Default: \code{TRUE}.}
+
+\item{use_huber}{Use the Huber estimates for center and scale? Default:
+\code{FALSE}.}
+
+\item{upper_only}{Only consider upper threshold? Default: \code{FALSE}.}
+
+\item{maxit}{The maximum number of iterations. Default: \code{20}.}
 
 \item{weight_init}{Initial weights. Default: \code{NULL} (no pre-determined outliers).}
 }
