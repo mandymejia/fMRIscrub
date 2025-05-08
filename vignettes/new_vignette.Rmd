@@ -11,18 +11,19 @@ vignette: >
 
 ```{r include=FALSE}
 library(knitr)
-knitr::opts_chunk$set(autodep = TRUE, cache = FALSE)
+knitr::opts_chunk$set(autodep = TRUE, cache = TRUE) # <- warning = FALSE
 ```
 
 This is the new `fMRIscrub` vignette.
 
 Let's load packages and list the file names:
 
-```{r}
-library(fMRIscrub)
+```{r, warning=FALSE}
 library(RNifti)
 library(fMRItools)
 library(ciftiTools)
+library(fMRIscrub)
+library(gridExtra)
 ciftiTools.setOption("wb_path", "~/Applications/workbench")
 
 rp_fname <- file.path("data", "HCP_Movement_Regressors.txt")
@@ -52,34 +53,6 @@ Read:
 cii <- read_cifti(cii_fname)
 ```
 
-(New Stuff)
-
-```{r}
-dim(cii) # locations by time
-```
-
-```{r}
-vols2rm <- IDvols_xifti(cii, method="DVARS")
-table(vols2rm$outlier_flag$Dual)
-
-spikes <- flags2spikes(vols2rm$outlier_flag$Dual, ncol(cii))
-```
-
-```{r}
-cii_scrubbed <- select_xifti(cii, which(!vols2rm$outlier_flag$Dual))
-dim(cii_scrubbed)
-```
-
-```{r}
-other <- NULL # such as `rp`
-cii_nuis_reg <- nuisance_regression(as.matrix(cii), cbind(1, spikes, other))
-```
-
-```{r}
-vols2rm_v2 <- IDvols(as.matrix(cii), method="DVARS")
-table(vols2rm$outlier_flag$Dual)
-```
-
 Plot:
 
 ```{r fig.cap="CIFTI cortex data", rgl=TRUE, format="jpg", fig.height=3.5, fig.width=4.5}
@@ -95,13 +68,13 @@ view_xifti_volume(cii, title="First volume") # skipped
 Read:
 
 ```{r}
-nii <- RNifti::readNifti(nii_fname)
+# nii <- RNifti::readNifti(nii_fname, volumes = 1:400)
 ```
 
 Plot:
 
 ```{r fig.height=5, fig.width=5}
-RNifti::view(nii[,,,1,drop=FALSE], interactive=FALSE)
+# RNifti::view(nii[,,,1,drop=FALSE], interactive=FALSE)
 ```
 
 # RPs
@@ -111,6 +84,63 @@ Read:
 ```{r}
 rp <- as.matrix(read.table(rp_fname)[,seq(6)])
 dim(rp)
-vols2rm_according_to_fd <- FD(rp)
-vols2rm_according_to_fd
+```
+With the found rps, we can calculate Framewise Displacement using the `FD` function. By summing the absolute values of the differences in rps, we produce the following results on the time interval:
+
+```{r}
+fd <- FD(rp)
+FDplot <- plot(fd)
+```
+
+
+# IDvols
+
+Using the `IDvols` function, there are different parameters, namely DVARS and projection scrubbing, you can give for varying outcomes. To start with DVARS, accessed by doing `IDvols(X, method='DVARS')`:
+
+Read:
+
+```{r}
+cii_mat <- t(as.matrix(cii))
+IDdvars <- IDvols(cii_mat, method='DVARS')
+DVARSplot <- plot(IDdvars)
+```
+
+The DVARS method used within the `fMRIscrub` package is based on Afyouni and Nichols (2018) dual cutoff method. Similar to FD, DVARS is found by finding the difference in signals. However, FD is based on the motion data, the RPs found earlier. DVARS is based on BOLD signal data, finding the difference between volumes across space.
+
+
+Plot:
+
+```{r}
+grid.arrange(FDplot, DVARSplot, nrow = 2, ncol = 1)
+```
+
+The second method mentioned previously was projection scrubbing. Projection scrubbing is used to identify volumes that contain heavy artifacting. To scrub with projection scrubbing, we use `IDvols(X, method = 'projection')`:
+
+Read:
+
+```{r}
+TEMP_IDproj_fname <- "Temporary_IDproj.rds"
+if (!file.exists(TEMP_IDproj_fname)) {
+  IDproj <- IDvols(cii_mat, method = 'projection')
+  saveRDS(IDproj, TEMP_IDproj_fname)
+}
+IDproj <- readRDS(TEMP_IDproj_fname)
+```
+
+Plot:
+
+```{r}
+PROJplot <- plot(IDproj)
+```
+
+Read:
+
+```{r}
+IDxii <- IDvols_xifti(cii, method = "DVARS")
+```
+
+Plot:
+
+```{r}
+XIIplot <- plot(IDxii)
 ```
