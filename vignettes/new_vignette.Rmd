@@ -27,8 +27,8 @@ library(gridExtra)
 ciftiTools.setOption("wb_path", "~/Applications/workbench")
 
 rp_fname <- file.path("data", "HCP_Movement_Regressors.txt")
-cii_fname <- file.path("data", "HCP_rfMRI_REST2_RL_Atlas.dtseries.nii")
-nii_fname <- file.path("data", "HCP_rfMRI_REST2_RL.nii.gz")
+cii_fname <- file.path("data", "HCP_rfMRI_REST2_LR_Atlas_MSMAll.dtseries.nii")
+nii_fname <- file.path("data", "HCP_rfMRI_REST2_LR.nii.gz")
 ```
 
 Cortex plots from `ciftiTools` are made possible by the `rgl` package. To prepare the R Markdown document for knitting we need to do the following: 
@@ -121,7 +121,8 @@ Read:
 ```{r}
 TEMP_IDproj_fname <- "Temporary_IDproj.rds"
 if (!file.exists(TEMP_IDproj_fname)) {
-  IDproj <- IDvols(cii_mat, method = 'projection')
+  IDproj <- IDvols(cii, method = 'projection')
+  # IDproj_mat <- IDvols(cii_mat, method = 'projection')
   saveRDS(IDproj, TEMP_IDproj_fname)
 }
 IDproj <- readRDS(TEMP_IDproj_fname)
@@ -130,17 +131,5 @@ IDproj <- readRDS(TEMP_IDproj_fname)
 Plot:
 
 ```{r}
-PROJplot <- plot(IDproj)
-```
-
-Read:
-
-```{r}
-IDxii <- IDvols_xifti(cii, method = "DVARS")
-```
-
-Plot:
-
-```{r}
-XIIplot <- plot(IDxii)
+XIIplot <- plot(IDproj)
 ```
