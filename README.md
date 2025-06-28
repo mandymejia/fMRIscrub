@@ -52,7 +52,7 @@ We acknowledge the corresponding funding for the ABIDE I data:
 > Mind Institute, as well as by an NIMH award to MPM ( NIMH
 > R03MH096321).
 
-## Vignette
+## Vignette/Demo
 
 See [this
 link](https://github.com/mandymejia/fMRIscrub/blob/master/vignettes/projection_scrubbing.rmd)

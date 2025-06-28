@@ -48,7 +48,7 @@ We acknowledge the corresponding funding for the ABIDE I data:
 > Primary support for the work by Adriana Di Martino was provided by the (NIMH K23MH087770) and the Leon Levy Foundation.
 Primary support for the work by Michael P. Milham and the INDI team was provided by gifts from Joseph P. Healy and the Stavros Niarchos Foundation to the Child Mind Institute, as well as by an NIMH award to MPM ( NIMH R03MH096321). 
 
-## Vignette
+## Vignette/Demo
 
 See [this link](https://github.com/mandymejia/fMRIscrub/blob/master/vignettes/projection_scrubbing.rmd) to view the tutorial vignette.
 
