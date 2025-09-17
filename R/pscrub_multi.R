@@ -102,7 +102,7 @@ pscrub_multi = function(
   # Simple arguments. ----------------------------------------------------------
   stopifnot(is_1(center, "logical"))
   stopifnot(is_1(scale, "logical"))
-  stopifnot(is_posNum(kurt_quantile))
+  stopifnot(is_posNum(kurt_quantile, zero_ok=TRUE))
   stopifnot(is_1(get_dirs, "logical"))
   stopifnot(is_1(full_PCA, "logical"))
   stopifnot(is_1(get_outliers, "logical"))
