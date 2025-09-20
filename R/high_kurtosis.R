@@ -19,7 +19,9 @@
 #'  no components meet the quantile cutoff, should the component with the highest
 #'  kurtosis be returned? Default: \code{FALSE}.
 #'
-#' @return A logical vector indicating whether each component has high kurtosis.
+#' @return A two-element list: the first a numeric vector with the computed 
+#'  kurtosis values for each component, and the second a logical vector 
+#'  indicating whether each component has high kurtosis.
 #'
 #' @importFrom stats quantile qnorm
 #' @importFrom e1071 kurtosis
@@ -56,5 +58,5 @@ high_kurtosis <- function(Comps, kurt_quantile = 0.99, n_sim = 5000, min_1=FALSE
   # Keep at least one component if `min_1`.
   if (all(!high) && min_1) { high[which(kurt==max(kurt))[1]] <- TRUE }
 
-  high
+  list(kurt=kurt, high=high)
 }

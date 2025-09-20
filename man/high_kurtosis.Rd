@@ -22,7 +22,9 @@ no components meet the quantile cutoff, should the component with the highest
 kurtosis be returned? Default: \code{FALSE}.}
 }
 \value{
-A logical vector indicating whether each component has high kurtosis.
+A two-element list: the first a numeric vector with the computed
+kurtosis values for each component, and the second a logical vector
+indicating whether each component has high kurtosis.
 }
 \description{
 The kurtosis cutoff is a high quantile (default 0.99) of the sampling distribution

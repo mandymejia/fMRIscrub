@@ -151,9 +151,11 @@ This will be a list with components:
 \item{U}{The \eqn{T} by \eqn{Q} PC score matrix.}
 \item{D}{The standard deviation of each PC.}
 \item{V}{The \eqn{P} by \eqn{Q} PC directions matrix. Included only if \code{get_dirs}.}
+\item{kurt}{The length \code{Q} numeric vector giving the kurtosis values for each component.}
 \item{highkurt}{The length \code{Q} logical vector indicating scores of high kurtosis.}
 \item{U_dt}{Detrended components of \code{U}. Included only if components were mean- or variance-detrended.}
-\item{highkurt}{The length \code{Q} logical vector indicating detrended scores of high kurtosis.}
+\item{kurt_dt}{The length \code{Q} numeric vector giving the kurtosis values for each component.}
+\item{highkurt_dt}{The length \code{Q} logical vector indicating detrended scores of high kurtosis.}
 \item{nPCs_PESEL}{The number of PCs selected by PESEL.}
 \item{nPCs_avgvar}{The number of above-average variance PCs.}
 }
@@ -166,8 +168,10 @@ If ICA was used, this will be a list with components:
 \describe{
 \item{S}{The \eqn{P} by \eqn{Q} source signals matrix. Included only if \code{get_dirs}}
 \item{M}{The \eqn{T} by \eqn{Q} mixing matrix.}
+\item{kurt}{The length \code{Q} numeric vector giving the kurtosis values for each component.}
 \item{highkurt}{The length \code{Q} logical vector indicating mixing scores of high kurtosis.}
 \item{M_dt}{Detrended components of \code{M}. Included only if components were mean- or variance-detrended.}
+\item{kurt_dt}{The length \code{Q} numeric vector giving the kurtosis values for each component.}
 \item{highkurt}{The length \code{Q} logical vector indicating detrended mixing scores of high kurtosis. Included only if components were mean- or variance-detrended.}
 }
 }

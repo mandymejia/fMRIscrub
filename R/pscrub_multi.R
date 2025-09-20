@@ -46,9 +46,11 @@
 #'      \item{U}{The \eqn{T} by \eqn{Q} PC score matrix.}
 #'      \item{D}{The standard deviation of each PC.}
 #'      \item{V}{The \eqn{P} by \eqn{Q} PC directions matrix. Included only if \code{get_dirs}.}
+#'      \item{kurt}{The length \code{Q} numeric vector giving the kurtosis values for each component.}
 #'      \item{highkurt}{The length \code{Q} logical vector indicating scores of high kurtosis.}
 #'      \item{U_dt}{Detrended components of \code{U}. Included only if components were mean- or variance-detrended.}
-#'      \item{highkurt}{The length \code{Q} logical vector indicating detrended scores of high kurtosis.}
+#'      \item{kurt_dt}{The length \code{Q} numeric vector giving the kurtosis values for each component.}
+#'      \item{highkurt_dt}{The length \code{Q} logical vector indicating detrended scores of high kurtosis.}
 #'      \item{nPCs_PESEL}{The number of PCs selected by PESEL.}
 #'      \item{nPCs_avgvar}{The number of above-average variance PCs.}
 #'    }
@@ -62,9 +64,11 @@
 #      \item{U}{The \eqn{T} by \eqn{Q} PC score matrix.}
 #      \item{D}{The standard deviation of each PC.}
 #      \item{V}{The \eqn{P} by \eqn{Q} PC directions matrix. Included only if \code{get_dirs}}
+#      \item{kurt}{The length \code{Q} numeric vector giving the kurtosis values for each component.}
 #      \item{highkurt}{The length \code{Q} logical vector indicating scores of high kurtosis.}
 #      \item{U_dt}{Detrended components of \code{U}. Included only if components were mean- or variance-detrended.}
-#      \item{highkurt}{The length \code{Q} logical vector indicating detrended scores of high kurtosis. Included only if components were mean- or variance-detrended.}
+#      \item{kurt_dt}{The length \code{Q} numeric vector giving the kurtosis values for each component.}
+#      \item{highkurt_dt}{The length \code{Q} logical vector indicating detrended scores of high kurtosis. Included only if components were mean- or variance-detrended.}
 #    }
 #  }
 #'  \item{ICA}{
@@ -72,8 +76,10 @@
 #'    \describe{
 #'      \item{S}{The \eqn{P} by \eqn{Q} source signals matrix. Included only if \code{get_dirs}} 
 #'      \item{M}{The \eqn{T} by \eqn{Q} mixing matrix.}
+#'      \item{kurt}{The length \code{Q} numeric vector giving the kurtosis values for each component.}
 #'      \item{highkurt}{The length \code{Q} logical vector indicating mixing scores of high kurtosis.}
 #'      \item{M_dt}{Detrended components of \code{M}. Included only if components were mean- or variance-detrended.}
+#'      \item{kurt_dt}{The length \code{Q} numeric vector giving the kurtosis values for each component.}
 #'      \item{highkurt}{The length \code{Q} logical vector indicating detrended mixing scores of high kurtosis. Included only if components were mean- or variance-detrended.}
 #'    }
 #'  }
@@ -326,7 +332,8 @@ pscrub_multi = function(
     }
     # Identify which PCs have high kurtosis.
     if (any(c("PCA_kurt", "PCA2_kurt") %in% projection)) {
-      out$PCA$highkurt <- high_kurtosis(out$PCA$U[, seq(maxK_PCA), drop=FALSE], kurt_quantile=kurt_quantile, min_1=TRUE)
+      out$PCA[c("kurt", "highkurt")] <- high_kurtosis(
+        out$PCA$U[, seq(maxK_PCA), drop=FALSE], kurt_quantile=kurt_quantile, min_1=TRUE)
     }
   } else {
     # If computing ICA but not PCA or fusedPCA, just get the nPCs.
@@ -375,7 +382,7 @@ pscrub_multi = function(
   # }
   # # Identify which fused PCs have high kurtosis.
   # if (any(c("fusedPCA_kurt", "fusedPCA2_kurt") %in% projection)) {
-  #   out$fusedPCA$highkurt <- high_kurtosis(out$fusedPCA$U, kurt_quantile=kurt_quantile)
+  #   out$fusedPCA[c("kurt", "highkurt")]<- high_kurtosis(out$fusedPCA$U, kurt_quantile=kurt_quantile)
   # }
 
   # Remove extra PCA information.
@@ -417,7 +424,7 @@ pscrub_multi = function(
     }
 
     if (any(c("ICA_kurt", "ICA2_kurt") %in% projection)) {
-      out$ICA$highkurt <- high_kurtosis(out$ICA$M, kurt_quantile=kurt_quantile)
+      out$ICA[c("kurt", "highkurt")] <- high_kurtosis(out$ICA$M, kurt_quantile=kurt_quantile)
     }
 
     if(!get_dirs){ out$ICA$S <- NULL }
@@ -428,19 +435,19 @@ pscrub_multi = function(
       out$PCA$U_dt <- apply(
         out$PCA$U, 2, rob_stabilize, center=comps_mean_dt, scale=comps_var_dt
       )
-      out$PCA$highkurt_dt <- high_kurtosis(out$PCA$U_dt, kurt_quantile=kurt_quantile)
+      out$PCA[c("kurt_dt", "highkurt_dt")] <- high_kurtosis(out$PCA$U_dt, kurt_quantile=kurt_quantile)
     }
     # if (!is.null(out$fusedPCA$U)) { 
     #   out$fusedPCA$U_dt <- apply(
     #     out$fusedPCA$U, 2, rob_stabilize, center=comps_mean_dt, scale=comps_var_dt
     #   )
-    #   out$fusedPCA$highkurt_dt <- high_kurtosis(out$fusedPCA$U_dt, kurt_quantile=kurt_quantile)
+    #   out$fusedPCA[c("kurt_dt", "highkurt_dt")] <- high_kurtosis(out$fusedPCA$U_dt, kurt_quantile=kurt_quantile)
     # }
     if (!is.null(out$ICA$M)) { 
       out$ICA$M_dt <- apply(
         out$ICA$M, 2, rob_stabilize, center=comps_mean_dt, scale=comps_var_dt
       )
-      out$ICA$highkurt_dt <- high_kurtosis(out$ICA$M_dt, kurt_quantile=kurt_quantile)
+      out$ICA[c("kurt_dt", "highkurt_dt")] <- high_kurtosis(out$ICA$M_dt, kurt_quantile=kurt_quantile)
     }
   }
 
