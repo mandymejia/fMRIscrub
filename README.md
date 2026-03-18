@@ -18,6 +18,14 @@ denoising strategies such as anatomical CompCor, detrending, and
 nuisance regression. Projection scrubbing is also applicable to other
 outlier detection tasks involving high-dimensional data.
 
+This package builds off of
+[`fMRItools`](https://github.com/mandymejia/fMRItools), which collects
+common functions for handling fMRI data, and
+[`ciftiTools`](https://github.com/mandymejia/ciftiTools) to support
+working with the CIFTI format. Also check out our new package,
+[`rrobot`](https://github.com/mandymejia/rrobot), for methods made for
+robust outlier detection.
+
 ## Installation
 
 You can install the development version of fMRIscrub from CRAN with:
