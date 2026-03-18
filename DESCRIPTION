@@ -41,15 +41,12 @@ License: GPL-3
 Encoding: UTF-8
 Imports:
     MASS,
-    cellWise,
     e1071,
     fMRItools (>= 0.2.2),
     pesel,
     robustbase,
     stats,
-    expm,
-    utils,
-    gamlss
+    utils
 Suggests:
     corpcor,
     cowplot,
@@ -65,7 +62,7 @@ Suggests:
     testthat (>= 3.0.0),
     covr
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 URL: https://github.com/mandymejia/fMRIscrub
 BugReports: https://github.com/mandymejia/fMRIscrub/issues
 LazyData: true

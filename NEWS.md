@@ -1,3 +1,7 @@
+# 0.15.0
+
+* Robust outlier detection methods have been moved to the `rrobot` R package. 
+
 # 0.13.0
 
 * Robust outlier detection methods: `robdist.R` and `SHASH.R`
