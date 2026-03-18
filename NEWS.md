@@ -1,6 +1,7 @@
 # 0.15.0
 
 * Robust outlier detection methods have been moved to the `rrobot` R package. 
+* `TR_for_resp_filt` argument to modified FD added
 
 # 0.13.0
 
